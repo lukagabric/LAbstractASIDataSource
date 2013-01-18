@@ -91,7 +91,7 @@
 - (void)willGetNewItems
 {
     _newsItems = nil;
-    
+    [_tableView reloadData];
     _tableView.hidden = YES;
     [_spinner startAnimating];
     self.navigationItem.rightBarButtonItem.enabled = NO;
