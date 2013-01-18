@@ -71,25 +71,47 @@
 
 - (void)reloadData
 {
+    [self willGetNewItems];
+    
+    __weak ViewController *weakSelf = self;
+    
+    [_newsDataSource getNewsItemsWithCompletitionBlock:^(NSArray *items, NSError *error) {
+        if (error)
+        {
+            [weakSelf didFailToGetNewsItemsWithError:error];
+        }
+
+        [self didGetNewItems:items];
+    }];
+}
+
+
+- (void)willGetNewItems
+{
     _newsItems = nil;
     
     _tableView.hidden = YES;
     [_spinner startAnimating];
     self.navigationItem.rightBarButtonItem.enabled = NO;
+}
+
+
+- (void)didGetNewItems:(NSArray *)items
+{
+    _newsItems = items;
     
-    [_newsDataSource getNewsItemsWithCompletitionBlock:^(NSArray *items, NSError *error) {
-        if (error)
-        {
-            //handle error
-        }
-        
-        _newsItems = items;
-    
-        [_tableView reloadData];
-        _tableView.hidden = NO;
-        [_spinner stopAnimating];
-        self.navigationItem.rightBarButtonItem.enabled = YES;
-    }];
+    [_tableView reloadData];
+    _tableView.hidden = NO;
+    [_spinner stopAnimating];
+    self.navigationItem.rightBarButtonItem.enabled = YES;
+}
+
+
+- (void)didFailToGetNewsItemsWithError:(NSError *)error
+{
+    [[[UIAlertView alloc] initWithTitle:@"Error" message:[error description] delegate:nil cancelButtonTitle:@"Close" otherButtonTitles:nil] show];
+    self.navigationItem.rightBarButtonItem.enabled = YES;
+    [_spinner stopAnimating];
 }
 
 
