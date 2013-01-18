@@ -80,8 +80,10 @@
         {
             [weakSelf didFailToGetNewsItemsWithError:error];
         }
-
-        [self didGetNewItems:items];
+        else
+        {
+            [self didGetNewItems:items];
+        }
     }];
 }
 
