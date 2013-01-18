@@ -1,0 +1,386 @@
+// !$*UTF8*$!
+{
+	archiveVersion = 1;
+	classes = {
+	};
+	objectVersion = 46;
+	objects = {
+
+/* Begin PBXBuildFile section */
+		A1B63CA216A94FF00085F8AD /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = A1B63CA116A94FF00085F8AD /* Foundation.framework */; };
+		A1B63CB616A9500B0085F8AD /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = A1B63CB516A9500B0085F8AD /* UIKit.framework */; };
+		A1B63CB716A9500B0085F8AD /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = A1B63CA116A94FF00085F8AD /* Foundation.framework */; };
+		A1B63CB916A9500B0085F8AD /* CoreGraphics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = A1B63CB816A9500B0085F8AD /* CoreGraphics.framework */; };
+		A1B63CDA16A950DE0085F8AD /* LAbstractASIDataSource.m in Sources */ = {isa = PBXBuildFile; fileRef = A1B63CD716A950DE0085F8AD /* LAbstractASIDataSource.m */; };
+		A1B63CE416A950E70085F8AD /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = A1B63CDD16A950E70085F8AD /* AppDelegate.m */; };
+		A1B63CE516A950E70085F8AD /* ViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = A1B63CDF16A950E70085F8AD /* ViewController.m */; };
+		A1B63CE716A950E70085F8AD /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = A1B63CE316A950E70085F8AD /* main.m */; };
+		A1B63CE816A950FC0085F8AD /* libLAbstractASIDataSource.a in Frameworks */ = {isa = PBXBuildFile; fileRef = A1B63C9E16A94FF00085F8AD /* libLAbstractASIDataSource.a */; };
+/* End PBXBuildFile section */
+
+/* Begin PBXCopyFilesBuildPhase section */
+		A1B63C9C16A94FF00085F8AD /* CopyFiles */ = {
+			isa = PBXCopyFilesBuildPhase;
+			buildActionMask = 2147483647;
+			dstPath = "include/${PRODUCT_NAME}";
+			dstSubfolderSpec = 16;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXCopyFilesBuildPhase section */
+
+/* Begin PBXFileReference section */
+		A1B63C9E16A94FF00085F8AD /* libLAbstractASIDataSource.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libLAbstractASIDataSource.a; sourceTree = BUILT_PRODUCTS_DIR; };
+		A1B63CA116A94FF00085F8AD /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
+		A1B63CB316A9500B0085F8AD /* LAbstractASIDataSourceSample.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = LAbstractASIDataSourceSample.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		A1B63CB516A9500B0085F8AD /* UIKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = UIKit.framework; path = System/Library/Frameworks/UIKit.framework; sourceTree = SDKROOT; };
+		A1B63CB816A9500B0085F8AD /* CoreGraphics.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreGraphics.framework; path = System/Library/Frameworks/CoreGraphics.framework; sourceTree = SDKROOT; };
+		A1B63CD616A950DE0085F8AD /* LAbstractASIDataSource.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LAbstractASIDataSource.h; sourceTree = "<group>"; };
+		A1B63CD716A950DE0085F8AD /* LAbstractASIDataSource.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LAbstractASIDataSource.m; sourceTree = "<group>"; };
+		A1B63CD916A950DE0085F8AD /* LAbstractASIDataSource-Prefix.pch */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "LAbstractASIDataSource-Prefix.pch"; sourceTree = "<group>"; };
+		A1B63CDC16A950E70085F8AD /* AppDelegate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AppDelegate.h; sourceTree = "<group>"; };
+		A1B63CDD16A950E70085F8AD /* AppDelegate.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AppDelegate.m; sourceTree = "<group>"; };
+		A1B63CDE16A950E70085F8AD /* ViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ViewController.h; sourceTree = "<group>"; };
+		A1B63CDF16A950E70085F8AD /* ViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ViewController.m; sourceTree = "<group>"; };
+		A1B63CE116A950E70085F8AD /* LAbstractASIDataSourceSample-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "LAbstractASIDataSourceSample-Info.plist"; sourceTree = "<group>"; };
+		A1B63CE216A950E70085F8AD /* LAbstractASIDataSourceSample-Prefix.pch */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "LAbstractASIDataSourceSample-Prefix.pch"; sourceTree = "<group>"; };
+		A1B63CE316A950E70085F8AD /* main.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
+		A1EF2E2C16A9DEE500C82775 /* README.md */ = {isa = PBXFileReference; lastKnownFileType = text; path = README.md; sourceTree = "<group>"; };
+/* End PBXFileReference section */
+
+/* Begin PBXFrameworksBuildPhase section */
+		A1B63C9B16A94FF00085F8AD /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				A1B63CA216A94FF00085F8AD /* Foundation.framework in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		A1B63CB016A9500B0085F8AD /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				A1B63CE816A950FC0085F8AD /* libLAbstractASIDataSource.a in Frameworks */,
+				A1B63CB616A9500B0085F8AD /* UIKit.framework in Frameworks */,
+				A1B63CB716A9500B0085F8AD /* Foundation.framework in Frameworks */,
+				A1B63CB916A9500B0085F8AD /* CoreGraphics.framework in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXFrameworksBuildPhase section */
+
+/* Begin PBXGroup section */
+		A1B63C9316A94FF00085F8AD = {
+			isa = PBXGroup;
+			children = (
+				A1EF2E2C16A9DEE500C82775 /* README.md */,
+				A1B63CA316A94FF00085F8AD /* LAbstractASIDataSource */,
+				A1B63CBA16A9500B0085F8AD /* LAbstractASIDataSourceSample */,
+				A1B63CA016A94FF00085F8AD /* Frameworks */,
+				A1B63C9F16A94FF00085F8AD /* Products */,
+			);
+			sourceTree = "<group>";
+		};
+		A1B63C9F16A94FF00085F8AD /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				A1B63C9E16A94FF00085F8AD /* libLAbstractASIDataSource.a */,
+				A1B63CB316A9500B0085F8AD /* LAbstractASIDataSourceSample.app */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		A1B63CA016A94FF00085F8AD /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+				A1B63CA116A94FF00085F8AD /* Foundation.framework */,
+				A1B63CB516A9500B0085F8AD /* UIKit.framework */,
+				A1B63CB816A9500B0085F8AD /* CoreGraphics.framework */,
+			);
+			name = Frameworks;
+			sourceTree = "<group>";
+		};
+		A1B63CA316A94FF00085F8AD /* LAbstractASIDataSource */ = {
+			isa = PBXGroup;
+			children = (
+				A1B63CD516A950DE0085F8AD /* Classes */,
+				A1B63CD816A950DE0085F8AD /* Supporting Files */,
+			);
+			path = LAbstractASIDataSource;
+			sourceTree = "<group>";
+		};
+		A1B63CBA16A9500B0085F8AD /* LAbstractASIDataSourceSample */ = {
+			isa = PBXGroup;
+			children = (
+				A1B63CDB16A950E70085F8AD /* Classes */,
+				A1B63CE016A950E70085F8AD /* Supporting Files */,
+			);
+			path = LAbstractASIDataSourceSample;
+			sourceTree = "<group>";
+		};
+		A1B63CD516A950DE0085F8AD /* Classes */ = {
+			isa = PBXGroup;
+			children = (
+				A1B63CD616A950DE0085F8AD /* LAbstractASIDataSource.h */,
+				A1B63CD716A950DE0085F8AD /* LAbstractASIDataSource.m */,
+			);
+			path = Classes;
+			sourceTree = "<group>";
+		};
+		A1B63CD816A950DE0085F8AD /* Supporting Files */ = {
+			isa = PBXGroup;
+			children = (
+				A1B63CD916A950DE0085F8AD /* LAbstractASIDataSource-Prefix.pch */,
+			);
+			path = "Supporting Files";
+			sourceTree = "<group>";
+		};
+		A1B63CDB16A950E70085F8AD /* Classes */ = {
+			isa = PBXGroup;
+			children = (
+				A1B63CDC16A950E70085F8AD /* AppDelegate.h */,
+				A1B63CDD16A950E70085F8AD /* AppDelegate.m */,
+				A1B63CDE16A950E70085F8AD /* ViewController.h */,
+				A1B63CDF16A950E70085F8AD /* ViewController.m */,
+			);
+			path = Classes;
+			sourceTree = "<group>";
+		};
+		A1B63CE016A950E70085F8AD /* Supporting Files */ = {
+			isa = PBXGroup;
+			children = (
+				A1B63CE116A950E70085F8AD /* LAbstractASIDataSourceSample-Info.plist */,
+				A1B63CE216A950E70085F8AD /* LAbstractASIDataSourceSample-Prefix.pch */,
+				A1B63CE316A950E70085F8AD /* main.m */,
+			);
+			path = "Supporting Files";
+			sourceTree = "<group>";
+		};
+/* End PBXGroup section */
+
+/* Begin PBXNativeTarget section */
+		A1B63C9D16A94FF00085F8AD /* LAbstractASIDataSource */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = A1B63CAC16A94FF00085F8AD /* Build configuration list for PBXNativeTarget "LAbstractASIDataSource" */;
+			buildPhases = (
+				A1B63C9A16A94FF00085F8AD /* Sources */,
+				A1B63C9B16A94FF00085F8AD /* Frameworks */,
+				A1B63C9C16A94FF00085F8AD /* CopyFiles */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = LAbstractASIDataSource;
+			productName = LAbstractASIDataSource;
+			productReference = A1B63C9E16A94FF00085F8AD /* libLAbstractASIDataSource.a */;
+			productType = "com.apple.product-type.library.static";
+		};
+		A1B63CB216A9500B0085F8AD /* LAbstractASIDataSourceSample */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = A1B63CD216A9500B0085F8AD /* Build configuration list for PBXNativeTarget "LAbstractASIDataSourceSample" */;
+			buildPhases = (
+				A1B63CAF16A9500B0085F8AD /* Sources */,
+				A1B63CB016A9500B0085F8AD /* Frameworks */,
+				A1B63CB116A9500B0085F8AD /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = LAbstractASIDataSourceSample;
+			productName = LAbstractASIDataSourceSample;
+			productReference = A1B63CB316A9500B0085F8AD /* LAbstractASIDataSourceSample.app */;
+			productType = "com.apple.product-type.application";
+		};
+/* End PBXNativeTarget section */
+
+/* Begin PBXProject section */
+		A1B63C9516A94FF00085F8AD /* Project object */ = {
+			isa = PBXProject;
+			attributes = {
+				LastUpgradeCheck = 0450;
+				ORGANIZATIONNAME = "Luka Gabric";
+			};
+			buildConfigurationList = A1B63C9816A94FF00085F8AD /* Build configuration list for PBXProject "LAbstractASIDataSource" */;
+			compatibilityVersion = "Xcode 3.2";
+			developmentRegion = English;
+			hasScannedForEncodings = 0;
+			knownRegions = (
+				en,
+			);
+			mainGroup = A1B63C9316A94FF00085F8AD;
+			productRefGroup = A1B63C9F16A94FF00085F8AD /* Products */;
+			projectDirPath = "";
+			projectRoot = "";
+			targets = (
+				A1B63C9D16A94FF00085F8AD /* LAbstractASIDataSource */,
+				A1B63CB216A9500B0085F8AD /* LAbstractASIDataSourceSample */,
+			);
+		};
+/* End PBXProject section */
+
+/* Begin PBXResourcesBuildPhase section */
+		A1B63CB116A9500B0085F8AD /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXResourcesBuildPhase section */
+
+/* Begin PBXSourcesBuildPhase section */
+		A1B63C9A16A94FF00085F8AD /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				A1B63CDA16A950DE0085F8AD /* LAbstractASIDataSource.m in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		A1B63CAF16A9500B0085F8AD /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				A1B63CE416A950E70085F8AD /* AppDelegate.m in Sources */,
+				A1B63CE516A950E70085F8AD /* ViewController.m in Sources */,
+				A1B63CE716A950E70085F8AD /* main.m in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXSourcesBuildPhase section */
+
+/* Begin XCBuildConfiguration section */
+		A1B63CAA16A94FF00085F8AD /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++0x";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				COPY_PHASE_STRIP = NO;
+				GCC_C_LANGUAGE_STANDARD = gnu99;
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"DEBUG=1",
+					"$(inherited)",
+				);
+				GCC_SYMBOLS_PRIVATE_EXTERN = NO;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 6.0;
+				ONLY_ACTIVE_ARCH = YES;
+				SDKROOT = iphoneos;
+			};
+			name = Debug;
+		};
+		A1B63CAB16A94FF00085F8AD /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++0x";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				COPY_PHASE_STRIP = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu99;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 6.0;
+				SDKROOT = iphoneos;
+				VALIDATE_PRODUCT = YES;
+			};
+			name = Release;
+		};
+		A1B63CAD16A94FF00085F8AD /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				DSTROOT = /tmp/LAbstractASIDataSource.dst;
+				GCC_PRECOMPILE_PREFIX_HEADER = YES;
+				GCC_PREFIX_HEADER = "LAbstractASIDataSource/Supporting Files/LAbstractASIDataSource-Prefix.pch";
+				OTHER_LDFLAGS = "-ObjC";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SKIP_INSTALL = YES;
+			};
+			name = Debug;
+		};
+		A1B63CAE16A94FF00085F8AD /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				DSTROOT = /tmp/LAbstractASIDataSource.dst;
+				GCC_PRECOMPILE_PREFIX_HEADER = YES;
+				GCC_PREFIX_HEADER = "LAbstractASIDataSource/Supporting Files/LAbstractASIDataSource-Prefix.pch";
+				OTHER_LDFLAGS = "-ObjC";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SKIP_INSTALL = YES;
+			};
+			name = Release;
+		};
+		A1B63CD316A9500B0085F8AD /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
+				GCC_PRECOMPILE_PREFIX_HEADER = YES;
+				GCC_PREFIX_HEADER = "LAbstractASIDataSourceSample/Supporting Files/LAbstractASIDataSourceSample-Prefix.pch";
+				INFOPLIST_FILE = "LAbstractASIDataSourceSample/Supporting Files/LAbstractASIDataSourceSample-Info.plist";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				WRAPPER_EXTENSION = app;
+			};
+			name = Debug;
+		};
+		A1B63CD416A9500B0085F8AD /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
+				GCC_PRECOMPILE_PREFIX_HEADER = YES;
+				GCC_PREFIX_HEADER = "LAbstractASIDataSourceSample/Supporting Files/LAbstractASIDataSourceSample-Prefix.pch";
+				INFOPLIST_FILE = "LAbstractASIDataSourceSample/Supporting Files/LAbstractASIDataSourceSample-Info.plist";
+				OTHER_CFLAGS = "-DNS_BLOCK_ASSERTIONS=1";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				WRAPPER_EXTENSION = app;
+			};
+			name = Release;
+		};
+/* End XCBuildConfiguration section */
+
+/* Begin XCConfigurationList section */
+		A1B63C9816A94FF00085F8AD /* Build configuration list for PBXProject "LAbstractASIDataSource" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				A1B63CAA16A94FF00085F8AD /* Debug */,
+				A1B63CAB16A94FF00085F8AD /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		A1B63CAC16A94FF00085F8AD /* Build configuration list for PBXNativeTarget "LAbstractASIDataSource" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				A1B63CAD16A94FF00085F8AD /* Debug */,
+				A1B63CAE16A94FF00085F8AD /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		A1B63CD216A9500B0085F8AD /* Build configuration list for PBXNativeTarget "LAbstractASIDataSourceSample" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				A1B63CD316A9500B0085F8AD /* Debug */,
+				A1B63CD416A9500B0085F8AD /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+/* End XCConfigurationList section */
+	};
+	rootObject = A1B63C9516A94FF00085F8AD /* Project object */;
+}
