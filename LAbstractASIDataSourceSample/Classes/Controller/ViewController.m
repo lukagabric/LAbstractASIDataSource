@@ -78,6 +78,11 @@
     self.navigationItem.rightBarButtonItem.enabled = NO;
     
     [_newsDataSource getNewsItemsWithCompletitionBlock:^(NSArray *items, NSError *error) {
+        if (error)
+        {
+            //handle error
+        }
+        
         _newsItems = items;
     
         [_tableView reloadData];
