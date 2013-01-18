@@ -31,6 +31,7 @@
 		A1B63CDA16A950DE0085F8AD /* LAbstractASIDataSource.m in Sources */ = {isa = PBXBuildFile; fileRef = A1B63CD716A950DE0085F8AD /* LAbstractASIDataSource.m */; };
 		A1B63CE716A950E70085F8AD /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = A1B63CE316A950E70085F8AD /* main.m */; };
 		A1B63CE816A950FC0085F8AD /* libLAbstractASIDataSource.a in Frameworks */ = {isa = PBXBuildFile; fileRef = A1B63C9E16A94FF00085F8AD /* libLAbstractASIDataSource.a */; };
+		A1D307F716A9EB8100088B5D /* NewsDataSource.m in Sources */ = {isa = PBXBuildFile; fileRef = A1D307F616A9EB8100088B5D /* NewsDataSource.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXCopyFilesBuildPhase section */
@@ -92,6 +93,8 @@
 		A1B63CE116A950E70085F8AD /* LAbstractASIDataSourceSample-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "LAbstractASIDataSourceSample-Info.plist"; sourceTree = "<group>"; };
 		A1B63CE216A950E70085F8AD /* LAbstractASIDataSourceSample-Prefix.pch */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "LAbstractASIDataSourceSample-Prefix.pch"; sourceTree = "<group>"; };
 		A1B63CE316A950E70085F8AD /* main.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
+		A1D307F516A9EB8000088B5D /* NewsDataSource.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NewsDataSource.h; sourceTree = "<group>"; };
+		A1D307F616A9EB8100088B5D /* NewsDataSource.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = NewsDataSource.m; sourceTree = "<group>"; };
 		A1EF2E2C16A9DEE500C82775 /* README.md */ = {isa = PBXFileReference; lastKnownFileType = text; path = README.md; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -177,6 +180,8 @@
 				A1544A6216A9EA5F0027F57A /* NewsItem.m */,
 				A1544A6716A9EA8A0027F57A /* NewsParser.h */,
 				A1544A6816A9EA8A0027F57A /* NewsParser.m */,
+				A1D307F516A9EB8000088B5D /* NewsDataSource.h */,
+				A1D307F616A9EB8100088B5D /* NewsDataSource.m */,
 			);
 			path = Model;
 			sourceTree = "<group>";
@@ -381,6 +386,7 @@
 				A1544A6416A9EA5F0027F57A /* ViewController.m in Sources */,
 				A1544A6516A9EA5F0027F57A /* NewsItem.m in Sources */,
 				A1544A6916A9EA8A0027F57A /* NewsParser.m in Sources */,
+				A1D307F716A9EB8100088B5D /* NewsDataSource.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
