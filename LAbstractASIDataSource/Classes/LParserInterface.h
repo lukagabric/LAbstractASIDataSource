@@ -1,11 +1,10 @@
 @protocol LParserInterface <NSObject>
 
 
-@property (readonly, nonatomic) NSError *error;
-@property (readonly, nonatomic) NSArray *itemsArray;
-
 
 - (void)parseData:(NSData *)data;
+- (NSError *)error;
+- (NSArray *)itemsArray;
 
 
 @end
