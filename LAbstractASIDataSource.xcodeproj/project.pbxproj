@@ -34,6 +34,16 @@
 		A1D307F716A9EB8100088B5D /* NewsDataSource.m in Sources */ = {isa = PBXBuildFile; fileRef = A1D307F616A9EB8100088B5D /* NewsDataSource.m */; };
 /* End PBXBuildFile section */
 
+/* Begin PBXContainerItemProxy section */
+		A119155616AA129E00F513A7 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = A1B63C9516A94FF00085F8AD /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = A1B63C9D16A94FF00085F8AD;
+			remoteInfo = LAbstractASIDataSource;
+		};
+/* End PBXContainerItemProxy section */
+
 /* Begin PBXCopyFilesBuildPhase section */
 		A1B63C9C16A94FF00085F8AD /* CopyFiles */ = {
 			isa = PBXCopyFilesBuildPhase;
@@ -316,6 +326,7 @@
 			buildRules = (
 			);
 			dependencies = (
+				A119155716AA129E00F513A7 /* PBXTargetDependency */,
 			);
 			name = LAbstractASIDataSourceSample;
 			productName = LAbstractASIDataSourceSample;
@@ -392,6 +403,14 @@
 		};
 /* End PBXSourcesBuildPhase section */
 
+/* Begin PBXTargetDependency section */
+		A119155716AA129E00F513A7 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = A1B63C9D16A94FF00085F8AD /* LAbstractASIDataSource */;
+			targetProxy = A119155616AA129E00F513A7 /* PBXContainerItemProxy */;
+		};
+/* End PBXTargetDependency section */
+
 /* Begin XCBuildConfiguration section */
 		A1B63CAA16A94FF00085F8AD /* Debug */ = {
 			isa = XCBuildConfiguration;
@@ -446,6 +465,7 @@
 				DSTROOT = /tmp/LAbstractASIDataSource.dst;
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "LAbstractASIDataSource/Supporting Files/LAbstractASIDataSource-Prefix.pch";
+				IPHONEOS_DEPLOYMENT_TARGET = 5.0;
 				OTHER_LDFLAGS = "-ObjC";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SKIP_INSTALL = YES;
@@ -458,6 +478,7 @@
 				DSTROOT = /tmp/LAbstractASIDataSource.dst;
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "LAbstractASIDataSource/Supporting Files/LAbstractASIDataSource-Prefix.pch";
+				IPHONEOS_DEPLOYMENT_TARGET = 5.0;
 				OTHER_LDFLAGS = "-ObjC";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SKIP_INSTALL = YES;
@@ -471,6 +492,7 @@
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "LAbstractASIDataSourceSample/Supporting Files/LAbstractASIDataSourceSample-Prefix.pch";
 				INFOPLIST_FILE = "LAbstractASIDataSourceSample/Supporting Files/LAbstractASIDataSourceSample-Info.plist";
+				IPHONEOS_DEPLOYMENT_TARGET = 5.0;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				WRAPPER_EXTENSION = app;
 			};
@@ -483,6 +505,7 @@
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "LAbstractASIDataSourceSample/Supporting Files/LAbstractASIDataSourceSample-Prefix.pch";
 				INFOPLIST_FILE = "LAbstractASIDataSourceSample/Supporting Files/LAbstractASIDataSourceSample-Info.plist";
+				IPHONEOS_DEPLOYMENT_TARGET = 5.0;
 				OTHER_CFLAGS = "-DNS_BLOCK_ASSERTIONS=1";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				WRAPPER_EXTENSION = app;
