@@ -37,7 +37,7 @@
 
 + (ASIHTTPRequest *)requestWithUrl:(NSString *)url
                        cachePolicy:(ASICachePolicy)cachePolicy
-                      timeInterval:(NSTimeInterval)timeInterval
+                   timeoutInterval:(NSTimeInterval)timeoutInterval
                            headers:(NSDictionary *)headers
                         parameters:(NSDictionary *)params
                      requestMethod:(NSString *)requestMethod
@@ -55,8 +55,8 @@
     
     request.downloadCache = [ASIDownloadCache sharedCache];
     request.cachePolicy = cachePolicy;
-    request.secondsToCache = timeInterval;
     request.requestMethod = requestMethod;
+    request.timeOutSeconds = timeoutInterval;
     
     for (NSString *key in [headers allKeys])
         [request addRequestHeader:key value:[headers valueForKey:key]];
@@ -81,7 +81,7 @@
 
 - (void)getDataWithUrl:(NSString *)url
            cachePolicy:(ASICachePolicy)cachePolicy
-          timeInterval:(NSTimeInterval)timeInterval
+       timeoutInterval:(NSTimeInterval)timeoutInterval
                headers:(NSDictionary *)headers
             parameters:(NSDictionary *)params
          requestMethod:(NSString *)requestMethod
@@ -94,7 +94,7 @@
     
     ASIHTTPRequest *request = [LAbstractASIDataSource requestWithUrl:url
                                                          cachePolicy:cachePolicy
-                                                        timeInterval:timeInterval
+                                                     timeoutInterval:timeoutInterval
                                                              headers:headers
                                                           parameters:params
                                                        requestMethod:requestMethod

@@ -15,7 +15,7 @@
 {
     [self getDataWithUrl:[self newsItemsUrl]
              cachePolicy:ASIDoNotReadFromCacheCachePolicy
-            timeInterval:0
+         timeoutInterval:20
                  headers:nil
               parameters:nil
            requestMethod:@"GET"

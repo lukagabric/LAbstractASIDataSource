@@ -17,7 +17,7 @@ typedef enum tagDataSourceError
 
 - (void)getDataWithUrl:(NSString *)url
            cachePolicy:(ASICachePolicy)cachePolicy
-          timeInterval:(NSTimeInterval)timeInterval
+       timeoutInterval:(NSTimeInterval)timeoutInterval
                headers:(NSDictionary *)headers
             parameters:(NSDictionary *)params
          requestMethod:(NSString *)requestMethod
@@ -30,7 +30,7 @@ typedef enum tagDataSourceError
 
 + (ASIHTTPRequest *)requestWithUrl:(NSString *)url
                        cachePolicy:(ASICachePolicy)cachePolicy
-                      timeInterval:(NSTimeInterval)timeInterval
+                   timeoutInterval:(NSTimeInterval)timeoutInterval
                            headers:(NSDictionary *)headers
                         parameters:(NSDictionary *)params
                      requestMethod:(NSString *)requestMethod
