@@ -3,6 +3,8 @@ LAbstractASIDataSource
 
 iOS Data Source is used to simplify the process of getting data from web. See LAbstractASIDataSourceSample which shows how to get an rss feed, parse the xml and present collected data. The data source implementation itself is in the LAbstractASIDataSource class and LParserInterface.h defines a protocol that the parser must conform to.
 
+ASIHTTPRequest is used for data download.
+
 The idea is to use the data source by calling a method of the structure below. The data is downloaded, parsed and then the completition block is called.
 
     [_newsDataSource getNewsItemsWithCompletitionBlock:^(NSArray *items, NSError *error, NSDictionary *userInfo) {
