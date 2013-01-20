@@ -86,7 +86,7 @@
             parameters:(NSDictionary *)params
          requestMethod:(NSString *)requestMethod
            parserClass:(Class)parserClass
-     completitionBlock:(void(^)(NSArray *items, NSError *error))completitionBlock
+     completitionBlock:(void(^)(NSArray *items, NSError *error, NSDictionary *userInfo))completitionBlock
 {
     if (!url) return;
     
@@ -107,11 +107,11 @@
                                        dispatch_async(dispatch_get_main_queue(), ^{
                                            if ([req isCancelled])
                                            {
-                                               completitionBlock(nil, [NSError errorWithDomain:@"Data request cancelled" code:27 userInfo:nil]);
+                                               completitionBlock(nil, [NSError errorWithDomain:@"Data request cancelled" code:DataSourceErrorRequestCancelled userInfo:nil], nil);
                                            }
                                            else
                                            {
-                                               completitionBlock(nil, [NSError errorWithDomain:@"Data request failed" code:15 userInfo:nil]);
+                                               completitionBlock(nil, [NSError errorWithDomain:@"Data request failed" code:DataSourceErrorRequestFailed userInfo:nil], nil);
                                            }
                                        });
                                    }
@@ -119,16 +119,16 @@
                                    {
                                        dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
                                            id <LParserInterface> parser = [[parserClass class] new];
-                                           [parser parseData:[req responseData]];
+                                           [parser parseData:req.responseData];
                                            
                                            dispatch_async(dispatch_get_main_queue(), ^{
                                                if (parser.error)
                                                {
-                                                   completitionBlock(nil, parser.error);
+                                                   completitionBlock(nil, parser.error, req.responseHeaders);
                                                }
                                                else
                                                {
-                                                   completitionBlock(parser.itemsArray, nil);
+                                                   completitionBlock(parser.itemsArray, nil, req.responseHeaders);
                                                }
                                            });
                                        });

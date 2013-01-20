@@ -11,7 +11,7 @@
 }
 
 
-- (void)getNewsItemsWithCompletitionBlock:(void(^)(NSArray *items, NSError *error))completitionBlock
+- (void)getNewsItemsWithCompletitionBlock:(void(^)(NSArray *items, NSError *error, NSDictionary *userInfo))completitionBlock
 {
     [self getDataWithUrl:[self newsItemsUrl]
              cachePolicy:ASIDoNotReadFromCacheCachePolicy
@@ -20,8 +20,8 @@
               parameters:nil
            requestMethod:@"GET"
              parserClass:[NewsParser class]
-       completitionBlock:^(NSArray *items, NSError *error) {
-           completitionBlock(items, error);
+       completitionBlock:^(NSArray *items, NSError *error, NSDictionary *dictionary) {
+           completitionBlock(items, error, dictionary);
        }];
 }
 

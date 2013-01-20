@@ -75,14 +75,14 @@
     
     __weak ViewController *weakSelf = self;
     
-    [_newsDataSource getNewsItemsWithCompletitionBlock:^(NSArray *items, NSError *error) {
+    [_newsDataSource getNewsItemsWithCompletitionBlock:^(NSArray *items, NSError *error, NSDictionary *userInfo) {
         if (error)
         {
             [weakSelf didFailToGetNewsItemsWithError:error];
         }
         else
         {
-            [self didGetNewItems:items];
+            [weakSelf didGetNewItems:items];
         }
     }];
 }

@@ -2,6 +2,13 @@
 #import "ASIDownloadCache.h"
 
 
+typedef enum tagDataSourceError
+{
+    DataSourceErrorRequestCancelled,
+    DataSourceErrorRequestFailed
+}DataSourceError;
+
+
 @interface LAbstractASIDataSource : NSObject
 {
     NSMutableDictionary *_requestsDict;
@@ -15,7 +22,7 @@
             parameters:(NSDictionary *)params
          requestMethod:(NSString *)requestMethod
            parserClass:(Class)parserClass
-     completitionBlock:(void(^)(NSArray *items, NSError *error))completitionBlock;
+     completitionBlock:(void(^)(NSArray *items, NSError *error, NSDictionary *userInfo))completitionBlock;
 
 - (void)cancelRequestWithUrl:(NSString *)url;
 - (void)cancelAllRequests;
