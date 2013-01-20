@@ -19,7 +19,7 @@ The idea is to use the data source by calling a method of the structure below. T
 Implementation sample
 ---------------------
 
-The idea is to subclass LAbstractASIDataSource class as in NewsDataSource. In that class, three methods are implemented. These methods are convenient, and used to get data from e.g. UIViewController where you want to present this data.
+Subclass LAbstractASIDataSource class as in NewsDataSource class of the sample project. In that class, three methods are implemented. These methods are convenient, and used to get data from e.g. UIViewController where you want to present this data.
 
 First method just returns the data url.
 
