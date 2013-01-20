@@ -14,7 +14,7 @@
 - (void)getNewsItemsWithCompletitionBlock:(void(^)(NSArray *items, NSError *error, NSDictionary *userInfo))completitionBlock
 {
     [self getDataWithUrl:[self newsItemsUrl]
-             cachePolicy:ASIDoNotReadFromCacheCachePolicy
+             cachePolicy:ASIAskServerIfModifiedWhenStaleCachePolicy
          timeoutInterval:20
                  headers:nil
               parameters:nil
