@@ -51,7 +51,6 @@ Second method uses method implemented in the super class LAbstractASIDataSource.
 
 The third method is used to cancel the request.
 
-
     - (void)cancelNewsItemsRequest
     {
         [self cancelRequestWithUrl:[self newsItemsUrl]];
