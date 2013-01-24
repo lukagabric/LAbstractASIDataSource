@@ -4,8 +4,9 @@
 
 typedef enum tagDataSourceError
 {
+    DataSourceErrorIncorrectRequestParameters,
     DataSourceErrorRequestCancelled,
-    DataSourceErrorRequestFailed
+    DataSourceErrorRequestFailed,
 }DataSourceError;
 
 
@@ -15,9 +16,18 @@ typedef enum tagDataSourceError
 }
 
 
+- (void)getDataWithRequest:(ASIHTTPRequest *)request
+               parserClass:(Class)parserClass
+         completitionBlock:(void(^)(NSArray *items, NSError *error, NSDictionary *userInfo))completitionBlock;
+
+- (void)getDataFromUrl:(NSString *)url
+           parserClass:(Class)parserClass
+     completitionBlock:(void(^)(NSArray *items, NSError *error, NSDictionary *userInfo))completitionBlock;
+
 - (void)getDataWithUrl:(NSString *)url
            cachePolicy:(ASICachePolicy)cachePolicy
        timeoutInterval:(NSTimeInterval)timeoutInterval
+        secondsToCache:(NSTimeInterval)secondsToCache
                headers:(NSDictionary *)headers
             parameters:(NSDictionary *)params
          requestMethod:(NSString *)requestMethod
@@ -31,10 +41,10 @@ typedef enum tagDataSourceError
 + (ASIHTTPRequest *)requestWithUrl:(NSString *)url
                        cachePolicy:(ASICachePolicy)cachePolicy
                    timeoutInterval:(NSTimeInterval)timeoutInterval
+                    secondsToCache:(NSTimeInterval)secondsToCache
                            headers:(NSDictionary *)headers
                         parameters:(NSDictionary *)params
-                     requestMethod:(NSString *)requestMethod
-                       finishBlock:(void(^)(ASIHTTPRequest *req))finishBlock;
+                     requestMethod:(NSString *)requestMethod;
 
 
 @end

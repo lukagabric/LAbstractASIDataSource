@@ -16,6 +16,7 @@
     [self getDataWithUrl:[self newsItemsUrl]
              cachePolicy:ASIAskServerIfModifiedWhenStaleCachePolicy
          timeoutInterval:20
+          secondsToCache:10
                  headers:nil
               parameters:nil
            requestMethod:@"GET"

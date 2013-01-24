@@ -19,7 +19,112 @@
 }
 
 
-#pragma mark - Create requests
+#pragma mark - Get data
+
+
+- (void)getDataWithRequest:(ASIHTTPRequest *)request parserClass:(Class)parserClass completitionBlock:(void(^)(NSArray *items, NSError *error, NSDictionary *userInfo))completitionBlock
+{
+    if (!request)
+    {
+        completitionBlock(nil, [NSError errorWithDomain:@"Request is null. Incorrect request parameters?" code:DataSourceErrorIncorrectRequestParameters userInfo:nil], nil);
+    }
+    else
+    {
+        [self cancelRequestWithUrl:[request.url absoluteString]];
+        
+        __weak LAbstractASIDataSource *weakSelf = self;
+        __weak ASIHTTPRequest *req = request;
+        
+        void (^reqCompletitionBlock)(ASIHTTPRequest *asiHttpRequest) = ^(ASIHTTPRequest *asiHttpRequest) {
+            [_requestsDict removeObjectForKey:[asiHttpRequest.url absoluteString]];
+            [weakSelf parseDataFromRequest:asiHttpRequest parserClass:parserClass completitionBlock:completitionBlock];
+        };
+        
+        [req setCompletionBlock:^{
+            reqCompletitionBlock(req);
+        }];
+        
+        [req setFailedBlock:^{
+            reqCompletitionBlock(req);
+        }];
+        
+        [_requestsDict setObject:request forKey:[request.url absoluteString]];
+        
+        [request startAsynchronous];
+    }
+}
+
+
+- (void)getDataFromUrl:(NSString *)url parserClass:(Class)parserClass completitionBlock:(void(^)(NSArray *items, NSError *error, NSDictionary *userInfo))completitionBlock
+{
+    [self getDataWithRequest:[ASIHTTPRequest requestWithURL:[NSURL URLWithString:url]] parserClass:parserClass completitionBlock:completitionBlock];
+}
+
+
+- (void)getDataWithUrl:(NSString *)url
+           cachePolicy:(ASICachePolicy)cachePolicy
+       timeoutInterval:(NSTimeInterval)timeoutInterval
+        secondsToCache:(NSTimeInterval)secondsToCache
+               headers:(NSDictionary *)headers
+            parameters:(NSDictionary *)params
+         requestMethod:(NSString *)requestMethod
+           parserClass:(Class)parserClass
+     completitionBlock:(void(^)(NSArray *items, NSError *error, NSDictionary *userInfo))completitionBlock
+{
+    ASIHTTPRequest *request = [LAbstractASIDataSource requestWithUrl:url
+                                                         cachePolicy:cachePolicy
+                                                     timeoutInterval:timeoutInterval
+                                                      secondsToCache:secondsToCache
+                                                             headers:headers
+                                                          parameters:params
+                                                       requestMethod:requestMethod];
+    
+    [self getDataWithRequest:request parserClass:parserClass completitionBlock:completitionBlock];
+}
+
+
+#pragma mark - Parse data
+
+
+- (void)parseDataFromRequest:(ASIHTTPRequest *)req
+                 parserClass:(Class)parserClass
+           completitionBlock:(void(^)(NSArray *items, NSError *error, NSDictionary *userInfo))completitionBlock
+{
+    if (req.error)
+    {
+        dispatch_async(dispatch_get_main_queue(), ^{
+            if ([req isCancelled])
+            {
+                completitionBlock(nil, [NSError errorWithDomain:@"Data request cancelled" code:DataSourceErrorRequestCancelled userInfo:nil], nil);
+            }
+            else
+            {
+                completitionBlock(nil, [NSError errorWithDomain:@"Data request failed" code:DataSourceErrorRequestFailed userInfo:nil], nil);
+            }
+        });
+    }
+    else
+    {
+        dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
+            id <LParserInterface> parser = [[parserClass class] new];
+            [parser parseData:req.responseData];
+            
+            dispatch_async(dispatch_get_main_queue(), ^{
+                if (parser.error)
+                {
+                    completitionBlock(nil, parser.error, req.responseHeaders);
+                }
+                else
+                {
+                    completitionBlock(parser.itemsArray, nil, req.responseHeaders);
+                }
+            });
+        });
+    }
+}
+
+
+#pragma mark - Create request
 
 
 + (NSString *)queryStringFromParams:(NSDictionary *)dict
@@ -38,10 +143,10 @@
 + (ASIHTTPRequest *)requestWithUrl:(NSString *)url
                        cachePolicy:(ASICachePolicy)cachePolicy
                    timeoutInterval:(NSTimeInterval)timeoutInterval
+                    secondsToCache:(NSTimeInterval)secondsToCache
                            headers:(NSDictionary *)headers
                         parameters:(NSDictionary *)params
                      requestMethod:(NSString *)requestMethod
-                       finishBlock:(void(^)(ASIHTTPRequest *req))finishBlock
 {
     NSString *paramsString = [self queryStringFromParams:params];
     NSString *urlString = url;
@@ -57,6 +162,7 @@
     request.cachePolicy = cachePolicy;
     request.requestMethod = requestMethod;
     request.timeOutSeconds = timeoutInterval;
+    request.secondsToCache = secondsToCache;
     
     for (NSString *key in [headers allKeys])
         [request addRequestHeader:key value:[headers valueForKey:key]];
@@ -67,77 +173,7 @@
         [request addRequestHeader:@"Content-Type" value:@"application/x-www-form-urlencoded"];
     }
     
-    [request setCompletionBlock:^{
-        finishBlock(request);
-    }];
-    
-    [request setFailedBlock:^{
-        finishBlock(request);
-    }];
-    
     return request;
-}
-
-
-- (void)getDataWithUrl:(NSString *)url
-           cachePolicy:(ASICachePolicy)cachePolicy
-       timeoutInterval:(NSTimeInterval)timeoutInterval
-               headers:(NSDictionary *)headers
-            parameters:(NSDictionary *)params
-         requestMethod:(NSString *)requestMethod
-           parserClass:(Class)parserClass
-     completitionBlock:(void(^)(NSArray *items, NSError *error, NSDictionary *userInfo))completitionBlock
-{
-    if (!url) return;
-    
-    [self cancelRequestWithUrl:url];
-    
-    ASIHTTPRequest *request = [LAbstractASIDataSource requestWithUrl:url
-                                                         cachePolicy:cachePolicy
-                                                     timeoutInterval:timeoutInterval
-                                                             headers:headers
-                                                          parameters:params
-                                                       requestMethod:requestMethod
-                                                         finishBlock:^(ASIHTTPRequest *req)
-                               {
-                                   [_requestsDict removeObjectForKey:url];
-                                   
-                                   if (req.error)
-                                   {
-                                       dispatch_async(dispatch_get_main_queue(), ^{
-                                           if ([req isCancelled])
-                                           {
-                                               completitionBlock(nil, [NSError errorWithDomain:@"Data request cancelled" code:DataSourceErrorRequestCancelled userInfo:nil], nil);
-                                           }
-                                           else
-                                           {
-                                               completitionBlock(nil, [NSError errorWithDomain:@"Data request failed" code:DataSourceErrorRequestFailed userInfo:nil], nil);
-                                           }
-                                       });
-                                   }
-                                   else
-                                   {
-                                       dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
-                                           id <LParserInterface> parser = [[parserClass class] new];
-                                           [parser parseData:req.responseData];
-                                           
-                                           dispatch_async(dispatch_get_main_queue(), ^{
-                                               if (parser.error)
-                                               {
-                                                   completitionBlock(nil, parser.error, req.responseHeaders);
-                                               }
-                                               else
-                                               {
-                                                   completitionBlock(parser.itemsArray, nil, req.responseHeaders);
-                                               }
-                                           });
-                                       });
-                                   }
-                               }];
-    
-    [_requestsDict setObject:request forKey:url];
-    
-    [request startAsynchronous];
 }
 
 
