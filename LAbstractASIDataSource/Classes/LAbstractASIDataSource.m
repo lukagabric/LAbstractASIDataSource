@@ -54,6 +54,18 @@
 }
 
 
+- (void)getDataWithUrl:(NSString *)url
+     completitionBlock:(void(^)(NSData *data, NSError *error, NSDictionary *userInfo))completitionBlock
+{
+    ASIHTTPRequest *request = [ASIHTTPRequest requestWithURL:[NSURL URLWithString:url] usingCache:[ASIDownloadCache sharedCache] andCachePolicy:ASIAskServerIfModifiedWhenStaleCachePolicy];
+    
+    [self getDataWithRequest:request completitionBlock:completitionBlock];
+}
+
+
+#pragma mark - Get and parse data
+
+
 - (void)getDataWithRequest:(ASIHTTPRequest *)request parserClass:(Class)parserClass completitionBlock:(void(^)(NSArray *items, NSError *error, NSDictionary *userInfo))completitionBlock
 {
     if (!request)
@@ -156,6 +168,30 @@
 }
 
 
+#pragma mark - Cancel requests
+
+
+- (void)cancelRequestWithUrl:(NSString *)url
+{
+    if (!url) return;
+    
+    ASIHTTPRequest *req = [_requestsDict objectForKey:url];
+    [req clearDelegatesAndCancel];
+    [_requestsDict removeObjectForKey:url];
+}
+
+
+- (void)cancelAllRequests
+{
+    for (ASIHTTPRequest *req in [_requestsDict allValues])
+    {
+        [req clearDelegatesAndCancel];
+    }
+    
+    [_requestsDict removeAllObjects];
+}
+
+
 #pragma mark - Create request
 
 
@@ -206,30 +242,6 @@
     }
     
     return request;
-}
-
-
-#pragma mark - Cancel requests
-
-
-- (void)cancelRequestWithUrl:(NSString *)url
-{
-    if (!url) return;
-    
-    ASIHTTPRequest *req = [_requestsDict objectForKey:url];
-    [req clearDelegatesAndCancel];
-    [_requestsDict removeObjectForKey:url];
-}
-
-
-- (void)cancelAllRequests
-{
-    for (ASIHTTPRequest *req in [_requestsDict allValues])
-    {
-        [req clearDelegatesAndCancel];
-    }
-    
-    [_requestsDict removeAllObjects];
 }
 
 
