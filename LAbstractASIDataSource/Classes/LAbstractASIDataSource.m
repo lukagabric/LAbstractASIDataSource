@@ -22,6 +22,33 @@
 #pragma mark - Get data
 
 
+- (void)getDataWithRequest:(ASIHTTPRequest *)request completitionBlock:(void (^)(NSData *, NSError *, NSDictionary *))completitionBlock
+{
+    if (!request) return;
+    
+    [self cancelRequestWithUrl:[request.url absoluteString]];
+    
+    __weak ASIHTTPRequest *req = request;
+    
+    void (^reqCompletitionBlock)(ASIHTTPRequest *asiHttpRequest) = ^(ASIHTTPRequest *asiHttpRequest) {
+        [_requestsDict removeObjectForKey:[req.url absoluteString]];
+        completitionBlock(asiHttpRequest.responseData, asiHttpRequest.error, asiHttpRequest.responseHeaders);
+    };
+    
+    [req setCompletionBlock:^{
+        reqCompletitionBlock(req);
+    }];
+    
+    [req setFailedBlock:^{
+        reqCompletitionBlock(req);
+    }];
+    
+    [_requestsDict setObject:request forKey:[request.url absoluteString]];
+    
+    [request startAsynchronous];
+}
+
+
 - (void)getDataWithRequest:(ASIHTTPRequest *)request parserClass:(Class)parserClass completitionBlock:(void(^)(NSArray *items, NSError *error, NSDictionary *userInfo))completitionBlock
 {
     if (!request)

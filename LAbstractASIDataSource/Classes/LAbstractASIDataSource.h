@@ -17,6 +17,9 @@ typedef enum tagDataSourceError
 
 
 - (void)getDataWithRequest:(ASIHTTPRequest *)request
+         completitionBlock:(void (^)(NSData *, NSError *, NSDictionary *))completitionBlock;
+
+- (void)getDataWithRequest:(ASIHTTPRequest *)request
                parserClass:(Class)parserClass
          completitionBlock:(void(^)(NSArray *items, NSError *error, NSDictionary *userInfo))completitionBlock;
 
