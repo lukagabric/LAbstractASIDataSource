@@ -24,28 +24,33 @@
 
 - (void)getDataWithRequest:(ASIHTTPRequest *)request completitionBlock:(void (^)(NSData *, NSError *, NSDictionary *))completitionBlock
 {
-    if (!request) return;
-    
-    [self cancelRequestWithUrl:[request.url absoluteString]];
-    
-    __weak ASIHTTPRequest *req = request;
-    
-    void (^reqCompletitionBlock)(ASIHTTPRequest *asiHttpRequest) = ^(ASIHTTPRequest *asiHttpRequest) {
-        [_requestsDict removeObjectForKey:[req.url absoluteString]];
-        completitionBlock(asiHttpRequest.responseData, asiHttpRequest.error, asiHttpRequest.responseHeaders);
-    };
-    
-    [req setCompletionBlock:^{
-        reqCompletitionBlock(req);
-    }];
-    
-    [req setFailedBlock:^{
-        reqCompletitionBlock(req);
-    }];
-    
-    [_requestsDict setObject:request forKey:[request.url absoluteString]];
-    
-    [request startAsynchronous];
+    if (!request)
+    {
+        completitionBlock(nil, [NSError errorWithDomain:@"Request is null. Incorrect request parameters?" code:DataSourceErrorIncorrectRequestParameters userInfo:nil], nil);
+    }
+    else
+    {
+        [self cancelRequestWithUrl:[request.url absoluteString]];
+        
+        __weak ASIHTTPRequest *req = request;
+        
+        void (^reqCompletitionBlock)(ASIHTTPRequest *asiHttpRequest) = ^(ASIHTTPRequest *asiHttpRequest) {
+            [_requestsDict removeObjectForKey:[req.url absoluteString]];
+            completitionBlock(asiHttpRequest.responseData, asiHttpRequest.error, asiHttpRequest.responseHeaders);
+        };
+        
+        [req setCompletionBlock:^{
+            reqCompletitionBlock(req);
+        }];
+        
+        [req setFailedBlock:^{
+            reqCompletitionBlock(req);
+        }];
+        
+        [_requestsDict setObject:request forKey:[request.url absoluteString]];
+        
+        [request startAsynchronous];
+    }
 }
 
 
