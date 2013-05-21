@@ -19,11 +19,16 @@ typedef enum tagDataSourceError
 #pragma mark - Get data
 
 
-- (void)getDataWithRequest:(ASIHTTPRequest *)request
-         completitionBlock:(void (^)(NSData *, NSError *, NSDictionary *))completitionBlock;
+- (void)getDataWithRequest:(ASIHTTPRequest *)request completitionBlock:(void (^)(ASIHTTPRequest *asiHttpRequest, NSError *error))completitionBlock;
 
 - (void)getDataWithUrl:(NSString *)url
-     completitionBlock:(void(^)(NSData *data, NSError *error, NSDictionary *userInfo))completitionBlock;
+     completitionBlock:(void (^)(ASIHTTPRequest *asiHttpRequest, NSError *error))completitionBlock;
+
+- (void)getDataWithUrl:(NSString *)url
+        secondsToCache:(NSTimeInterval)secondsToCache
+        timeOutSeconds:(NSTimeInterval)timeOutSeconds
+           cachePolicy:(ASICachePolicy)cachePolicy
+     completitionBlock:(void (^)(ASIHTTPRequest *asiHttpRequest, NSError *error))completitionBlock;
 
 
 #pragma mark - Get and parse data
@@ -51,6 +56,7 @@ typedef enum tagDataSourceError
 #pragma mark - Cancel
 
 
+- (BOOL)isRunningRequestForUrl:(NSString *)url;
 - (void)cancelRequestWithUrl:(NSString *)url;
 - (void)cancelAllRequests;
 

@@ -22,28 +22,29 @@
 #pragma mark - Get data
 
 
-- (void)getDataWithRequest:(ASIHTTPRequest *)request completitionBlock:(void (^)(NSData *, NSError *, NSDictionary *))completitionBlock
+- (void)getDataWithRequest:(ASIHTTPRequest *)request completitionBlock:(void (^)(ASIHTTPRequest *asiHttpRequest, NSError *error))completitionBlock
 {
     if (!request)
     {
-        completitionBlock(nil, [NSError errorWithDomain:@"Request is null. Incorrect request parameters?" code:DataSourceErrorIncorrectRequestParameters userInfo:nil], nil);
+        completitionBlock(nil, [NSError errorWithDomain:@"Request is null. Incorrect request parameters?" code:DataSourceErrorIncorrectRequestParameters userInfo:nil]);
     }
     else
     {
         [self cancelRequestWithUrl:[request.url absoluteString]];
         
         __weak ASIHTTPRequest *req = request;
-        
+        __weak NSMutableDictionary *weakDict = _requestsDict;
+
         void (^reqCompletitionBlock)(ASIHTTPRequest *asiHttpRequest) = ^(ASIHTTPRequest *asiHttpRequest) {
-            [_requestsDict removeObjectForKey:[req.url absoluteString]];
-            completitionBlock(asiHttpRequest.responseData, asiHttpRequest.error, asiHttpRequest.responseHeaders);
+            [weakDict removeObjectForKey:[req.url absoluteString]];
+            completitionBlock(asiHttpRequest, nil);
         };
         
-        [req setCompletionBlock:^{
+        [request setCompletionBlock:^{
             reqCompletitionBlock(req);
         }];
         
-        [req setFailedBlock:^{
+        [request setFailedBlock:^{
             reqCompletitionBlock(req);
         }];
         
@@ -55,13 +56,28 @@
 
 
 - (void)getDataWithUrl:(NSString *)url
-     completitionBlock:(void(^)(NSData *data, NSError *error, NSDictionary *userInfo))completitionBlock
+     completitionBlock:(void (^)(ASIHTTPRequest *asiHttpRequest, NSError *error))completitionBlock
 {
-    ASIHTTPRequest *request = [ASIHTTPRequest requestWithURL:[NSURL URLWithString:url] usingCache:[ASIDownloadCache sharedCache] andCachePolicy:ASIAskServerIfModifiedWhenStaleCachePolicy];
-    
+    __weak ASIHTTPRequest *request = [ASIHTTPRequest requestWithURL:[NSURL URLWithString:url] usingCache:[ASIDownloadCache sharedCache] andCachePolicy:ASIAskServerIfModifiedWhenStaleCachePolicy];
+    request.cacheStoragePolicy = ASICachePermanentlyCacheStoragePolicy;
+
     [self getDataWithRequest:request completitionBlock:completitionBlock];
 }
 
+
+- (void)getDataWithUrl:(NSString *)url
+        secondsToCache:(NSTimeInterval)secondsToCache
+        timeOutSeconds:(NSTimeInterval)timeOutSeconds
+           cachePolicy:(ASICachePolicy)cachePolicy
+     completitionBlock:(void (^)(ASIHTTPRequest *asiHttpRequest, NSError *error))completitionBlock
+{
+    __weak ASIHTTPRequest *request = [ASIHTTPRequest requestWithURL:[NSURL URLWithString:url] usingCache:[ASIDownloadCache sharedCache] andCachePolicy:cachePolicy];
+    request.secondsToCache = secondsToCache;
+    request.timeOutSeconds = timeOutSeconds;
+    request.cacheStoragePolicy = ASICachePermanentlyCacheStoragePolicy;
+    
+    [self getDataWithRequest:request completitionBlock:completitionBlock];
+}
 
 #pragma mark - Get and parse data
 
@@ -78,17 +94,18 @@
         
         __weak LAbstractASIDataSource *weakSelf = self;
         __weak ASIHTTPRequest *req = request;
+        __weak NSMutableDictionary *weakDict = _requestsDict;
         
         void (^reqCompletitionBlock)(ASIHTTPRequest *asiHttpRequest) = ^(ASIHTTPRequest *asiHttpRequest) {
-            [_requestsDict removeObjectForKey:[asiHttpRequest.url absoluteString]];
+            [weakDict removeObjectForKey:[asiHttpRequest.url absoluteString]];
             [weakSelf parseDataFromRequest:asiHttpRequest parserClass:parserClass completitionBlock:completitionBlock];
         };
         
-        [req setCompletionBlock:^{
+        [request setCompletionBlock:^{
             reqCompletitionBlock(req);
         }];
         
-        [req setFailedBlock:^{
+        [request setFailedBlock:^{
             reqCompletitionBlock(req);
         }];
         
@@ -168,6 +185,17 @@
 }
 
 
+#pragma mark - Running request
+
+
+- (BOOL)isRunningRequestForUrl:(NSString *)url
+{
+    ASIHTTPRequest *req = [_requestsDict objectForKey:url];
+    
+    return req != nil;
+}
+
+
 #pragma mark - Cancel requests
 
 
@@ -176,8 +204,12 @@
     if (!url) return;
     
     ASIHTTPRequest *req = [_requestsDict objectForKey:url];
-    [req clearDelegatesAndCancel];
-    [_requestsDict removeObjectForKey:url];
+    
+    if (req)
+    {
+        [req clearDelegatesAndCancel];
+        [_requestsDict removeObjectForKey:url];
+    }
 }
 
 
