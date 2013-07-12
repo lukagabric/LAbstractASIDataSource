@@ -75,7 +75,7 @@
     
     __weak ViewController *weakSelf = self;
     
-    [_newsDataSource getNewsItemsWithCompletitionBlock:^(NSArray *items, NSError *error, NSDictionary *userInfo) {
+    [_newsDataSource getNewsItemsWithCompletionBlock:^(NSArray *items, NSError *error) {
         if (error)
         {
             [weakSelf didFailToGetNewsItemsWithError:error];

@@ -4,7 +4,7 @@
 @interface NewsDataSource : LAbstractASIDataSource
 
 
-- (void)getNewsItemsWithCompletitionBlock:(void(^)(NSArray *items, NSError *error, NSDictionary *userInfo))completitionBlock;
+- (void)getNewsItemsWithCompletionBlock:(void(^)(NSArray *items, NSError *error))completionBlock;
 - (void)cancelNewsItemsRequest;
 
 

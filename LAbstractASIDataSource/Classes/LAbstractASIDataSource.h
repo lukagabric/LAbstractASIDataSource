@@ -4,53 +4,63 @@
 
 typedef enum tagDataSourceError
 {
-    DataSourceErrorIncorrectRequestParameters,
-    DataSourceErrorRequestCancelled,
-    DataSourceErrorRequestFailed,
+	DataSourceErrorIncorrectRequestParameters,
+	DataSourceErrorRequestCancelled,
+	DataSourceErrorRequestFailed,
 }DataSourceError;
 
 
 @interface LAbstractASIDataSource : NSObject
 {
-    NSMutableDictionary *_requestsDict;
+	NSMutableDictionary *_requestsDict;
+	NSMutableDictionary *_parsersDict;
 }
 
 
 #pragma mark - Get data
 
 
-- (void)getDataWithRequest:(ASIHTTPRequest *)request completitionBlock:(void (^)(ASIHTTPRequest *asiHttpRequest, NSError *error))completitionBlock;
+- (void)getDataWithRequest:(ASIHTTPRequest *)request completionBlock:(void(^)(ASIHTTPRequest *asiHttpRequest, NSError *error))completionBlock;
 
 - (void)getDataWithUrl:(NSString *)url
-     completitionBlock:(void (^)(ASIHTTPRequest *asiHttpRequest, NSError *error))completitionBlock;
+       completionBlock:(void(^)(ASIHTTPRequest *asiHttpRequest, NSError *error))completionBlock;
 
 - (void)getDataWithUrl:(NSString *)url
-        secondsToCache:(NSTimeInterval)secondsToCache
-        timeOutSeconds:(NSTimeInterval)timeOutSeconds
-           cachePolicy:(ASICachePolicy)cachePolicy
-     completitionBlock:(void (^)(ASIHTTPRequest *asiHttpRequest, NSError *error))completitionBlock;
+		secondsToCache:(NSTimeInterval)secondsToCache
+		timeOutSeconds:(NSTimeInterval)timeOutSeconds
+		   cachePolicy:(ASICachePolicy)cachePolicy
+       completionBlock:(void(^)(ASIHTTPRequest *asiHttpRequest, NSError *error))completionBlock;
+
+- (void)getDataWithUrl:(NSString *)url
+		secondsToCache:(NSTimeInterval)secondsToCache
+		timeOutSeconds:(NSTimeInterval)timeOutSeconds
+		   cachePolicy:(ASICachePolicy)cachePolicy
+			   headers:(NSDictionary *)headers
+			parameters:(NSDictionary *)params
+		 requestMethod:(NSString *)requestMethod
+       completionBlock:(void(^)(ASIHTTPRequest *asiHttpRequest, NSError *error))completionBlock;
 
 
 #pragma mark - Get and parse data
 
 
-- (void)getDataWithRequest:(ASIHTTPRequest *)request
-               parserClass:(Class)parserClass
-         completitionBlock:(void(^)(NSArray *items, NSError *error, NSDictionary *userInfo))completitionBlock;
+- (void)getObjectsWithRequest:(ASIHTTPRequest *)request
+				  parserClass:(Class)parserClass
+              completionBlock:(void(^)(NSArray *items, NSError *error, ASIHTTPRequest *asiHttpRequest))completionBlock;
 
-- (void)getDataFromUrl:(NSString *)url
-           parserClass:(Class)parserClass
-     completitionBlock:(void(^)(NSArray *items, NSError *error, NSDictionary *userInfo))completitionBlock;
+- (void)getObjectsFromUrl:(NSString *)url
+			  parserClass:(Class)parserClass
+          completionBlock:(void(^)(NSArray *items, NSError *error, ASIHTTPRequest *asiHttpRequest))completionBlock;
 
-- (void)getDataWithUrl:(NSString *)url
-           cachePolicy:(ASICachePolicy)cachePolicy
-       timeoutInterval:(NSTimeInterval)timeoutInterval
-        secondsToCache:(NSTimeInterval)secondsToCache
-               headers:(NSDictionary *)headers
-            parameters:(NSDictionary *)params
-         requestMethod:(NSString *)requestMethod
-           parserClass:(Class)parserClass
-     completitionBlock:(void(^)(NSArray *items, NSError *error, NSDictionary *userInfo))completitionBlock;
+- (void)getObjectsWithUrl:(NSString *)url
+			  cachePolicy:(ASICachePolicy)cachePolicy
+		  timeoutInterval:(NSTimeInterval)timeoutInterval
+		   secondsToCache:(NSTimeInterval)secondsToCache
+				  headers:(NSDictionary *)headers
+			   parameters:(NSDictionary *)params
+			requestMethod:(NSString *)requestMethod
+			  parserClass:(Class)parserClass
+          completionBlock:(void(^)(NSArray *items, NSError *error, ASIHTTPRequest *asiHttpRequest))completionBlock;
 
 
 #pragma mark - Cancel
@@ -65,12 +75,12 @@ typedef enum tagDataSourceError
 
 
 + (ASIHTTPRequest *)requestWithUrl:(NSString *)url
-                       cachePolicy:(ASICachePolicy)cachePolicy
-                   timeoutInterval:(NSTimeInterval)timeoutInterval
-                    secondsToCache:(NSTimeInterval)secondsToCache
-                           headers:(NSDictionary *)headers
-                        parameters:(NSDictionary *)params
-                     requestMethod:(NSString *)requestMethod;
+					   cachePolicy:(ASICachePolicy)cachePolicy
+				   timeoutInterval:(NSTimeInterval)timeoutInterval
+					secondsToCache:(NSTimeInterval)secondsToCache
+						   headers:(NSDictionary *)headers
+						parameters:(NSDictionary *)params
+					 requestMethod:(NSString *)requestMethod;
 
 
 #pragma mark -

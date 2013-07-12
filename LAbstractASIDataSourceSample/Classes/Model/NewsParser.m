@@ -66,22 +66,29 @@
 
 - (void)parseData:(NSData *)data
 {
-    NSXMLParser *parser = nil;
-	
-    if (data != nil)
-		parser = [[NSXMLParser alloc] initWithData:data];
-    else
-		return;
-	
-	_items = [NSMutableArray new];
-	
-    [parser setDelegate:self];
-	
-    [parser setShouldProcessNamespaces:NO];
-    [parser setShouldReportNamespacePrefixes:NO];
-    [parser setShouldResolveExternalEntities:NO];
-	
-    [parser parse];
+	if (data)
+	{
+		if (_parser)
+		{
+			[_parser abortParsing];
+		}
+        
+		_parser = [[NSXMLParser alloc] initWithData:data];
+        
+		_items = [NSMutableArray new];
+        
+		[_parser setDelegate:self];
+        
+		[_parser setShouldProcessNamespaces:NO];
+		[_parser setShouldReportNamespacePrefixes:NO];
+		[_parser setShouldResolveExternalEntities:NO];
+        
+		[_parser parse];
+	}
+	else
+	{
+		_error = [NSError errorWithDomain:@"No data" code:0 userInfo:nil];
+	}
 }
 
 
@@ -94,6 +101,16 @@
 - (NSArray *)itemsArray
 {
     return [NSArray arrayWithArray:_items];
+}
+
+
+#pragma mark - abort
+
+
+- (void)abortParsing
+{
+	[_parser abortParsing];
+	_error = [NSError errorWithDomain:@"Parsing aborted." code:299 userInfo:nil];
 }
 
 

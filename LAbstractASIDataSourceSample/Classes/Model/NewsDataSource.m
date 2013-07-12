@@ -11,19 +11,19 @@
 }
 
 
-- (void)getNewsItemsWithCompletitionBlock:(void(^)(NSArray *items, NSError *error, NSDictionary *userInfo))completitionBlock
+- (void)getNewsItemsWithCompletionBlock:(void(^)(NSArray *items, NSError *error))completionBlock
 {
-    [self getDataWithUrl:[self newsItemsUrl]
-             cachePolicy:ASIAskServerIfModifiedWhenStaleCachePolicy
-         timeoutInterval:20
-          secondsToCache:10
-                 headers:nil
-              parameters:nil
-           requestMethod:@"GET"
-             parserClass:[NewsParser class]
-       completitionBlock:^(NSArray *items, NSError *error, NSDictionary *dictionary) {
-           completitionBlock(items, error, dictionary);
-       }];
+    [self getObjectsWithUrl:[self newsItemsUrl]
+                cachePolicy:ASIAskServerIfModifiedWhenStaleCachePolicy
+            timeoutInterval:20
+             secondsToCache:10
+                    headers:nil
+                 parameters:nil
+              requestMethod:@"GET"
+                parserClass:[NewsParser class]
+            completionBlock:^(NSArray *items, NSError *error, ASIHTTPRequest *asiHttpRequest) {
+                completionBlock(items, error);
+            }];
 }
 
 

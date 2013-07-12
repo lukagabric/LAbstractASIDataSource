@@ -5,9 +5,9 @@ iOS Data Source is used to simplify the process of getting data from web. See LA
 
 ASIHTTPRequest is used for data download.
 
-The idea is to use the data source by calling a method of the structure below. The data is downloaded, parsed and then the completition block is called.
+The idea is to use the data source by calling a method of the structure below. The data is downloaded, parsed and then the completion block is called.
 
-    [_newsDataSource getNewsItemsWithCompletitionBlock:^(NSArray *items, NSError *error, NSDictionary *userInfo) {
+    [_newsDataSource getNewsItemsWithCompletionBlock:^(NSArray *items, NSError *error, NSDictionary *userInfo) {
         if (error)
         {
             //handle error
@@ -32,9 +32,9 @@ First method just returns the data url.
         return @"http://feeds.bbci.co.uk/news/rss.xml";
     }
 
-Second method uses method implemented in the super class LAbstractASIDataSource. There are a number of parameters to be defined. Among them is the parser class which will be used to parse the data and return the parsed entities. It must conform to LParserInterface. The completition block is passed in as a parameter and it will be executed after the request is finish and the data is parsed.
+Second method uses method implemented in the super class LAbstractASIDataSource. There are a number of parameters to be defined. Among them is the parser class which will be used to parse the data and return the parsed entities. It must conform to LParserInterface. The completion block is passed in as a parameter and it will be executed after the request is finish and the data is parsed.
 
-    - (void)getNewsItemsWithCompletitionBlock:(void(^)(NSArray *items, NSError *error, NSDictionary *userInfo))completitionBlock
+    - (void)getNewsItemsWithCompletionBlock:(void(^)(NSArray *items, NSError *error, NSDictionary *userInfo))completionBlock
     {
         [self getDataWithUrl:[self newsItemsUrl]
                  cachePolicy:ASIAskServerIfModifiedWhenStaleCachePolicy
@@ -44,8 +44,8 @@ Second method uses method implemented in the super class LAbstractASIDataSource.
                   parameters:nil
                requestMethod:@"GET"
                  parserClass:[NewsParser class]
-           completitionBlock:^(NSArray *items, NSError *error, NSDictionary *dictionary) {
-              completitionBlock(items, error, dictionary);
+           completionBlock:^(NSArray *items, NSError *error, NSDictionary *dictionary) {
+              completionBlock(items, error, dictionary);
         }];
     }
 
@@ -58,7 +58,7 @@ The third method is used to cancel the request.
 
 Now data can be used in e.g. view controller which owns an instance of data source class. As shown in the sample project:
 
-    [_newsDataSource getNewsItemsWithCompletitionBlock:^(NSArray *items, NSError *error, NSDictionary *userInfo) {
+    [_newsDataSource getNewsItemsWithCompletionBlock:^(NSArray *items, NSError *error, NSDictionary *userInfo) {
         if (error)
         {
             //handle error
