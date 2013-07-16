@@ -49,6 +49,8 @@
 		 }];
 
 		[_requestsDict setObject:request forKey:[request.url absoluteString]];
+        
+        [request startAsynchronous];
 	}
 }
 
