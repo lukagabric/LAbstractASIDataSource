@@ -19,6 +19,7 @@
 	return self;
 }
 
+
 #pragma mark - Get data
 
 
@@ -54,6 +55,7 @@
 	}
 }
 
+
 - (void)getDataWithUrl:(NSString *)url
 	 completionBlock:(void (^)(ASIHTTPRequest *asiHttpRequest, NSError *error))completionBlock
 {
@@ -63,6 +65,7 @@
 
 	[self getDataWithRequest:request completionBlock:completionBlock];
 }
+
 
 - (void)getDataWithUrl:(NSString *)url
 		secondsToCache:(NSTimeInterval)secondsToCache
@@ -78,6 +81,7 @@
 
 	[self getDataWithRequest:request completionBlock:completionBlock];
 }
+
 
 - (void)getDataWithUrl:(NSString *)url
 		secondsToCache:(NSTimeInterval)secondsToCache
@@ -110,6 +114,7 @@
 
 	[self getDataWithRequest:request completionBlock:completionBlock];
 }
+
 
 #pragma mark - Get and parse data
 
@@ -236,6 +241,7 @@
 	return req != nil;
 }
 
+
 #pragma mark - Cancel requests
 
 
@@ -263,6 +269,13 @@
 	}
 }
 
+
+- (void)cancelRequest:(ASIHTTPRequest *)request
+{
+    [self cancelRequestWithUrl:[request.url absoluteString]];
+}
+
+
 - (void)cancelAllRequests
 {
 	for (ASIHTTPRequest *req in [_requestsDict allValues])
@@ -272,6 +285,7 @@
 
 	[_requestsDict removeAllObjects];
 }
+
 
 #pragma mark - Create request
 
@@ -292,6 +306,7 @@
 
 	return [NSString stringWithFormat:@"%@", [query substringFromIndex:1]];
 }
+
 
 + (ASIHTTPRequest *)requestWithUrl:(NSString *)url
 					   cachePolicy:(ASICachePolicy)cachePolicy
@@ -332,6 +347,7 @@
 	return request;
 }
 
+
 #pragma mark - dealloc
 
 
@@ -339,6 +355,7 @@
 {
 	[self cancelAllRequests];
 }
+
 
 #pragma mark -
 

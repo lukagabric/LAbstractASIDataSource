@@ -68,6 +68,7 @@ typedef enum tagDataSourceError
 
 - (BOOL)isRunningRequestForUrl:(NSString *)url;
 - (void)cancelRequestWithUrl:(NSString *)url;
+- (void)cancelRequest:(ASIHTTPRequest *)request;
 - (void)cancelAllRequests;
 
 
