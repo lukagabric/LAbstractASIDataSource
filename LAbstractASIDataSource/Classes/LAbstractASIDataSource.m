@@ -279,11 +279,14 @@
 - (void)cancelAllRequests
 {
 	for (ASIHTTPRequest *req in [_requestsDict allValues])
-	{
 		[req clearDelegatesAndCancel];
-	}
 
 	[_requestsDict removeAllObjects];
+    
+    for (id <LParserInterface> parser in [_parsersDict allValues])
+        [parser abortParsing];
+    
+    [_parsersDict removeAllObjects];
 }
 
 
