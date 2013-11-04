@@ -28,7 +28,6 @@
 
     [self setupView];
     [self loadTableView];
-    [self loadSpinner];
 
     [self reloadData];
 }
@@ -39,6 +38,7 @@
     self.title = @"News";
     self.view.backgroundColor = [UIColor blackColor];
     self.navigationItem.rightBarButtonItem = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemRefresh target:self action:@selector(reloadData)];
+    _newsDataSource.activityView = self.view;
 }
 
 
@@ -54,47 +54,27 @@
 }
 
 
-- (void)loadSpinner
-{
-    UIActivityIndicatorView *spinner = [[UIActivityIndicatorView alloc] initWithActivityIndicatorStyle:UIActivityIndicatorViewStyleWhiteLarge];
-    spinner.hidesWhenStopped = YES;
-    spinner.center = self.view.center;
-    spinner.autoresizingMask = UIViewAutoresizingFlexibleTopMargin | UIViewAutoresizingFlexibleBottomMargin | UIViewAutoresizingFlexibleLeftMargin | UIViewAutoresizingFlexibleRightMargin;
-    [self.view addSubview:spinner];
-    
-    _spinner = spinner;
-}
-
-
 #pragma mark - loadData
 
 
 - (void)reloadData
 {
-    [self willGetNewItems];
+    self.navigationItem.rightBarButtonItem.enabled = NO;
     
     __weak ViewController *weakSelf = self;
     
-    [_newsDataSource getNewsItemsWithCompletionBlock:^(NSArray *items, NSError *error) {
+    [_newsDataSource getNewsItemsWithCompletionBlock:^(ASIHTTPRequest *asiHttpRequest, NSArray *parsedItems, NSError *error) {
         if (error)
         {
             [weakSelf didFailToGetNewsItemsWithError:error];
         }
         else
         {
-            [weakSelf didGetNewItems:items];
+            [weakSelf didGetNewItems:parsedItems];
         }
+        
+        weakSelf.navigationItem.rightBarButtonItem.enabled = YES;
     }];
-}
-
-
-- (void)willGetNewItems
-{
-    _newsItems = nil;
-    [_tableView reloadData];
-    _tableView.hidden = YES;
-    [_spinner startAnimating];
-    self.navigationItem.rightBarButtonItem.enabled = NO;
 }
 
 
@@ -103,8 +83,6 @@
     _newsItems = items;
     
     [_tableView reloadData];
-    _tableView.hidden = NO;
-    [_spinner stopAnimating];
     self.navigationItem.rightBarButtonItem.enabled = YES;
 }
 
@@ -113,7 +91,6 @@
 {
     [[[UIAlertView alloc] initWithTitle:@"Error" message:[error description] delegate:nil cancelButtonTitle:@"Close" otherButtonTitles:nil] show];
     self.navigationItem.rightBarButtonItem.enabled = YES;
-    [_spinner stopAnimating];
 }
 
 

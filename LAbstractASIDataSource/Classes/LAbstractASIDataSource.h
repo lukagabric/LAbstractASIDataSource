@@ -1,90 +1,68 @@
 #import "ASIHTTPRequest.h"
 #import "ASIDownloadCache.h"
-
-
-typedef enum tagDataSourceError
-{
-	DataSourceErrorIncorrectRequestParameters,
-	DataSourceErrorRequestCancelled,
-	DataSourceErrorRequestFailed,
-}DataSourceError;
+#import "LParserInterface.h"
 
 
 @interface LAbstractASIDataSource : NSObject
-{
-	NSMutableDictionary *_requestsDict;
-	NSMutableDictionary *_parsersDict;
-}
 
 
-#pragma mark - Get data
+@property (weak, nonatomic) UIView *activityView;
 
 
-- (void)getDataWithRequest:(ASIHTTPRequest *)request completionBlock:(void(^)(ASIHTTPRequest *asiHttpRequest, NSError *error))completionBlock;
-
-- (void)getDataWithUrl:(NSString *)url
-       completionBlock:(void(^)(ASIHTTPRequest *asiHttpRequest, NSError *error))completionBlock;
-
-- (void)getDataWithUrl:(NSString *)url
-		secondsToCache:(NSTimeInterval)secondsToCache
-		timeOutSeconds:(NSTimeInterval)timeOutSeconds
-		   cachePolicy:(ASICachePolicy)cachePolicy
-       completionBlock:(void(^)(ASIHTTPRequest *asiHttpRequest, NSError *error))completionBlock;
-
-- (void)getDataWithUrl:(NSString *)url
-		secondsToCache:(NSTimeInterval)secondsToCache
-		timeOutSeconds:(NSTimeInterval)timeOutSeconds
-		   cachePolicy:(ASICachePolicy)cachePolicy
-			   headers:(NSDictionary *)headers
-			parameters:(NSDictionary *)params
-		 requestMethod:(NSString *)requestMethod
-       completionBlock:(void(^)(ASIHTTPRequest *asiHttpRequest, NSError *error))completionBlock;
+#pragma mark - Get data/objects
 
 
-#pragma mark - Get and parse data
-
+- (void)getDataWithRequest:(ASIHTTPRequest *)request
+        andCompletionBlock:(void (^)(ASIHTTPRequest *asiHttpRequest, NSError *error))completionBlock;
 
 - (void)getObjectsWithRequest:(ASIHTTPRequest *)request
-				  parserClass:(Class)parserClass
-              completionBlock:(void(^)(NSArray *items, NSError *error, ASIHTTPRequest *asiHttpRequest))completionBlock;
+           andCompletionBlock:(void(^)(ASIHTTPRequest *asiHttpRequest, NSArray *parsedItems, NSError *error))completionBlock;
 
-- (void)getObjectsFromUrl:(NSString *)url
-			  parserClass:(Class)parserClass
-          completionBlock:(void(^)(NSArray *items, NSError *error, ASIHTTPRequest *asiHttpRequest))completionBlock;
-
-- (void)getObjectsWithUrl:(NSString *)url
-			  cachePolicy:(ASICachePolicy)cachePolicy
-		  timeoutInterval:(NSTimeInterval)timeoutInterval
-		   secondsToCache:(NSTimeInterval)secondsToCache
-				  headers:(NSDictionary *)headers
-			   parameters:(NSDictionary *)params
-			requestMethod:(NSString *)requestMethod
-			  parserClass:(Class)parserClass
-          completionBlock:(void(^)(NSArray *items, NSError *error, ASIHTTPRequest *asiHttpRequest))completionBlock;
-
-
-#pragma mark - Cancel
-
-
-- (BOOL)isRunningRequestForUrl:(NSString *)url;
-- (void)cancelRequestWithUrl:(NSString *)url;
-- (void)cancelRequest:(ASIHTTPRequest *)request;
-- (void)cancelAllRequests;
-
-
-#pragma mark - Create request
-
-
-+ (ASIHTTPRequest *)requestWithUrl:(NSString *)url
-					   cachePolicy:(ASICachePolicy)cachePolicy
-				   timeoutInterval:(NSTimeInterval)timeoutInterval
-					secondsToCache:(NSTimeInterval)secondsToCache
-						   headers:(NSDictionary *)headers
-						parameters:(NSDictionary *)params
-					 requestMethod:(NSString *)requestMethod;
+- (void)cancelLoad;
 
 
 #pragma mark -
+
+
+@end
+
+
+#pragma mark - Protected
+
+
+@interface LAbstractASIDataSource ()
+
+
+@property (assign, nonatomic) BOOL loadingDataInProgress;
+@property (assign, nonatomic) BOOL loadCancelled;
+@property (weak, nonatomic) ASIHTTPRequest *currentRequest;
+@property (weak, nonatomic) id <LParserInterface> currentParser;
+
+
+- (void)initialize;
+- (void)parseDataFromRequest:(ASIHTTPRequest *)req
+         withCompletionBlock:(void(^)(ASIHTTPRequest *asiHttpRequest, NSArray *parsedItems, NSError *error))completionBlock;
+
+
++ (NSString *)queryStringFromParams:(NSDictionary *)dict;
+
++ (ASIHTTPRequest *)requestWithUrl:(NSString *)url
+                       cachePolicy:(ASICachePolicy)cachePolicy
+                   timeoutInterval:(NSTimeInterval)timeoutInterval
+                    secondsToCache:(NSTimeInterval)secondsToCache
+                           headers:(NSDictionary *)headers
+                        parameters:(NSDictionary *)params
+                     requestMethod:(NSString *)requestMethod
+                       parserClass:(Class)parserClass;
+
++ (ASIHTTPRequest *)requestWithUrl:(NSString *)url
+                       cachePolicy:(ASICachePolicy)cachePolicy
+                   timeoutInterval:(NSTimeInterval)timeoutInterval
+                    secondsToCache:(NSTimeInterval)secondsToCache
+                           headers:(NSDictionary *)headers
+                        parameters:(NSDictionary *)params
+                     requestMethod:(NSString *)requestMethod
+                          userInfo:(NSDictionary *)userInfo;
 
 
 @end

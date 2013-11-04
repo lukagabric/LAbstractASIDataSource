@@ -5,31 +5,22 @@
 @implementation NewsDataSource
 
 
-- (NSString *)newsItemsUrl
+- (ASIHTTPRequest *)newsRequest
 {
-    return @"http://feeds.bbci.co.uk/news/rss.xml";
+    return [NewsDataSource requestWithUrl:@"http://feeds.bbci.co.uk/news/rss.xml"
+                              cachePolicy:ASIAskServerIfModifiedCachePolicy
+                          timeoutInterval:15
+                           secondsToCache:20
+                                  headers:nil
+                               parameters:nil
+                            requestMethod:@"GET"
+                              parserClass:[NewsParser class]];
 }
 
 
-- (void)getNewsItemsWithCompletionBlock:(void(^)(NSArray *items, NSError *error))completionBlock
+- (void)getNewsItemsWithCompletionBlock:(void(^)(ASIHTTPRequest *asiHttpRequest, NSArray *parsedItems, NSError *error))completionBlock
 {
-    [self getObjectsWithUrl:[self newsItemsUrl]
-                cachePolicy:ASIAskServerIfModifiedWhenStaleCachePolicy
-            timeoutInterval:20
-             secondsToCache:10
-                    headers:nil
-                 parameters:nil
-              requestMethod:@"GET"
-                parserClass:[NewsParser class]
-            completionBlock:^(NSArray *items, NSError *error, ASIHTTPRequest *asiHttpRequest) {
-                completionBlock(items, error);
-            }];
-}
-
-
-- (void)cancelNewsItemsRequest
-{
-    [self cancelRequestWithUrl:[self newsItemsUrl]];
+    [self getObjectsWithRequest:[self newsRequest] andCompletionBlock:completionBlock];
 }
 
 

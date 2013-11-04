@@ -1,5 +1,24 @@
 #import "LAbstractASIDataSource.h"
-#import "LParserInterface.h"
+#import "MBProgressHUD+L.h"
+
+
+#pragma mark - DSAssert
+
+
+#if DEBUG
+#define DSAssert(condition, desc, ...)	\
+do {				\
+__PRAGMA_PUSH_NO_EXTRA_ARG_WARNINGS \
+if (!(condition)) {		\
+[[NSAssertionHandler currentHandler] handleFailureInMethod:_cmd \
+object:self file:[NSString stringWithUTF8String:__FILE__] \
+lineNumber:__LINE__ description:(desc), ##__VA_ARGS__]; \
+}				\
+__PRAGMA_POP_NO_EXTRA_ARG_WARNINGS \
+} while(0)
+#else
+#define DSAssert(condition, desc, ...)
+#endif
 
 
 @implementation LAbstractASIDataSource
@@ -13,31 +32,57 @@
 	self = [super init];
 	if (self)
 	{
-		_requestsDict = [NSMutableDictionary new];
-		_parsersDict = [NSMutableDictionary new];
+        [self initialize];
 	}
 	return self;
+}
+
+
+- (void)initialize
+{
+    
+}
+
+
+- (void)dealloc
+{
+    [self cancelLoad];
 }
 
 
 #pragma mark - Get data
 
 
-- (void)getDataWithRequest:(ASIHTTPRequest *)request completionBlock:(void (^)(ASIHTTPRequest *asiHttpRequest, NSError *error))completionBlock
+- (void)getDataWithRequest:(ASIHTTPRequest *)request
+        andCompletionBlock:(void (^)(ASIHTTPRequest *asiHttpRequest, NSError *error))completionBlock
 {
+    DSAssert([[NSThread currentThread] isMainThread], @"This method must be called on the main thread.");
+    
+    if (_loadingDataInProgress) return;
+    
+    _loadingDataInProgress = YES;
+    _loadCancelled = NO;
+    
 	if (!request || !request.url)
 	{
-		completionBlock(nil, [NSError errorWithDomain:@"Request is null. Incorrect request parameters?" code:DataSourceErrorIncorrectRequestParameters userInfo:nil]);
+		completionBlock(request, [NSError errorWithDomain:@"Incorrect request parameters, is url nil?" code:400 userInfo:nil]);
+        _loadingDataInProgress = NO;
 	}
 	else
 	{
-		[self cancelRequestWithUrl:[request.url absoluteString]];
-        
+        if (_activityView)
+            [MBProgressHUD showProgressForView:_activityView];
+
+        __weak typeof(self) weakSelf = self;
 		__weak ASIHTTPRequest *req = request;
-		__weak NSMutableDictionary *weakDict = _requestsDict;
         
-		void (^ reqCompletionBlock)(ASIHTTPRequest *asiHttpRequest) = ^(ASIHTTPRequest *asiHttpRequest) {
-			[weakDict removeObjectForKey:[req.url absoluteString]];
+        void (^reqCompletionBlock)(ASIHTTPRequest *asiHttpRequest) = ^(ASIHTTPRequest *asiHttpRequest) {
+            weakSelf.currentRequest = nil;
+            weakSelf.loadingDataInProgress = NO;
+
+            if (weakSelf.activityView)
+                [MBProgressHUD showProgressForView:weakSelf.activityView];
+            
 			completionBlock(asiHttpRequest, asiHttpRequest.error);
 		};
         
@@ -49,70 +94,10 @@
             reqCompletionBlock(req);
         }];
         
-		[_requestsDict setObject:request forKey:[request.url absoluteString]];
+        _currentRequest = request;
         
         [request startAsynchronous];
 	}
-}
-
-
-- (void)getDataWithUrl:(NSString *)url
-       completionBlock:(void (^)(ASIHTTPRequest *asiHttpRequest, NSError *error))completionBlock
-{
-	__weak ASIHTTPRequest *request = [ASIHTTPRequest requestWithURL:[NSURL URLWithString:url] usingCache:[ASIDownloadCache sharedCache] andCachePolicy:ASIAskServerIfModifiedWhenStaleCachePolicy];
-    
-	request.cacheStoragePolicy = ASICachePermanentlyCacheStoragePolicy;
-    
-	[self getDataWithRequest:request completionBlock:completionBlock];
-}
-
-
-- (void)getDataWithUrl:(NSString *)url
-		secondsToCache:(NSTimeInterval)secondsToCache
-		timeOutSeconds:(NSTimeInterval)timeOutSeconds
-		   cachePolicy:(ASICachePolicy)cachePolicy
-       completionBlock:(void (^)(ASIHTTPRequest *asiHttpRequest, NSError *error))completionBlock
-{
-	__weak ASIHTTPRequest *request = [ASIHTTPRequest requestWithURL:[NSURL URLWithString:url] usingCache:[ASIDownloadCache sharedCache] andCachePolicy:cachePolicy];
-    
-	request.secondsToCache = secondsToCache;
-	request.timeOutSeconds = timeOutSeconds;
-	request.cacheStoragePolicy = ASICachePermanentlyCacheStoragePolicy;
-    
-	[self getDataWithRequest:request completionBlock:completionBlock];
-}
-
-
-- (void)getDataWithUrl:(NSString *)url
-		secondsToCache:(NSTimeInterval)secondsToCache
-		timeOutSeconds:(NSTimeInterval)timeOutSeconds
-		   cachePolicy:(ASICachePolicy)cachePolicy
-			   headers:(NSDictionary *)headers
-			parameters:(NSDictionary *)params
-		 requestMethod:(NSString *)requestMethod
-       completionBlock:(void (^)(ASIHTTPRequest *asiHttpRequest, NSError *error))completionBlock
-{
-	if (!url)
-	{
-		completionBlock(nil, [NSError errorWithDomain:@"No url." code:-1 userInfo:nil]);
-		return;
-	}
-    
-	ASIHTTPRequest *request = [LAbstractASIDataSource requestWithUrl:url
-														 cachePolicy:cachePolicy
-													 timeoutInterval:timeOutSeconds
-													  secondsToCache:secondsToCache
-															 headers:headers
-														  parameters:params
-													   requestMethod:requestMethod];
-    
-	if (!request)
-	{
-		completionBlock(nil, [NSError errorWithDomain:@"Request error." code:-1 userInfo:nil]);
-		return;
-	}
-    
-	[self getDataWithRequest:request completionBlock:completionBlock];
 }
 
 
@@ -120,68 +105,44 @@
 
 
 - (void)getObjectsWithRequest:(ASIHTTPRequest *)request
-				  parserClass:(Class)parserClass
-              completionBlock:(void(^)(NSArray *items, NSError *error, ASIHTTPRequest *asiHttpRequest))completionBlock
+           andCompletionBlock:(void(^)(ASIHTTPRequest *asiHttpRequest, NSArray *parsedItems, NSError *error))completionBlock
 {
-	if (!request)
+    DSAssert([[NSThread currentThread] isMainThread], @"This method must be called on the main thread.");
+    
+    if (_loadingDataInProgress) return;
+    
+    _loadingDataInProgress = YES;
+    _loadCancelled = NO;
+    
+	if (!request || !request.url)
 	{
-		completionBlock(nil, [NSError errorWithDomain:@"Request is null. Incorrect request parameters?" code:DataSourceErrorIncorrectRequestParameters userInfo:nil], request);
+		completionBlock(request, nil, [NSError errorWithDomain:@"Incorrect request parameters, is url nil?" code:400 userInfo:nil]);
+        _loadingDataInProgress = NO;
 	}
 	else
 	{
-		[self cancelRequestWithUrl:[request.url absoluteString]];
+        if (_activityView)
+            [MBProgressHUD showProgressForView:_activityView];
         
-		__weak LAbstractASIDataSource *weakSelf = self;
-		__weak ASIHTTPRequest *req = request;
-		__weak NSMutableDictionary *weakDict = _requestsDict;
-        
-		void (^ reqCompletionBlock)(ASIHTTPRequest *asiHttpRequest) = ^(ASIHTTPRequest *asiHttpRequest) {
-			[weakDict removeObjectForKey:[asiHttpRequest.url absoluteString]];
-			[weakSelf parseDataFromRequest:asiHttpRequest parserClass:parserClass completionBlock:completionBlock];
-		};
-        
+        __weak typeof(self) weakSelf = self;
+		__weak ASIHTTPRequest *weakReq = request;
+
 		[request setCompletionBlock:^{
-            reqCompletionBlock(req);
+            weakSelf.currentRequest = nil;
+            [weakSelf parseDataFromRequest:weakReq withCompletionBlock:completionBlock];
         }];
         
 		[request setFailedBlock:^{
-            reqCompletionBlock(req);
+            weakSelf.currentRequest = nil;
+            weakSelf.loadingDataInProgress = NO;
+            if (completionBlock)
+                completionBlock(weakReq, nil, weakReq.error);
         }];
         
-		[_requestsDict setObject:request forKey:[request.url absoluteString]];
+        _currentRequest = request;
         
         [request startAsynchronous];
 	}
-}
-
-
-- (void)getObjectsFromUrl:(NSString *)url
-			  parserClass:(Class)parserClass
-          completionBlock:(void(^)(NSArray *items, NSError *error, ASIHTTPRequest *asiHttpRequest))completionBlock
-{
-	[self getObjectsWithRequest:[ASIHTTPRequest requestWithURL:[NSURL URLWithString:url]] parserClass:parserClass completionBlock:completionBlock];
-}
-
-
-- (void)getObjectsWithUrl:(NSString *)url
-			  cachePolicy:(ASICachePolicy)cachePolicy
-		  timeoutInterval:(NSTimeInterval)timeoutInterval
-		   secondsToCache:(NSTimeInterval)secondsToCache
-				  headers:(NSDictionary *)headers
-			   parameters:(NSDictionary *)params
-			requestMethod:(NSString *)requestMethod
-			  parserClass:(Class)parserClass
-          completionBlock:(void(^)(NSArray *items, NSError *error, ASIHTTPRequest *asiHttpRequest))completionBlock
-{
-	ASIHTTPRequest *request = [LAbstractASIDataSource requestWithUrl:url
-														 cachePolicy:cachePolicy
-													 timeoutInterval:timeoutInterval
-													  secondsToCache:secondsToCache
-															 headers:headers
-														  parameters:params
-													   requestMethod:requestMethod];
-    
-	[self getObjectsWithRequest:request parserClass:parserClass completionBlock:completionBlock];
 }
 
 
@@ -189,103 +150,67 @@
 
 
 - (void)parseDataFromRequest:(ASIHTTPRequest *)req
-				 parserClass:(Class)parserClass
-             completionBlock:(void(^)(NSArray *items, NSError *error, ASIHTTPRequest *asiHttpRequest))completionBlock
+         withCompletionBlock:(void(^)(ASIHTTPRequest *asiHttpRequest, NSArray *parsedItems, NSError *error))completionBlock
 {
-	if (req.error)
-	{
-		dispatch_async(dispatch_get_main_queue(), ^{
-            if ([req isCancelled])
+    __weak typeof(self) weakSelf = self;
+    
+    dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
+        Class parserClass = [req.userInfo objectForKey:@"parserClass"];
+        
+        DSAssert(parserClass, @"Parser class must be set with the request");
+        
+        NSError *error;
+        NSArray *parsedItems;
+        
+        if (!weakSelf.loadCancelled)
+        {
+            id <LParserInterface> parser = [[parserClass class] new];
+            weakSelf.currentParser = parser;
+            [parser parseData:req.responseData];
+            weakSelf.currentParser = nil;
+            
+            error = [parser error];
+            
+            if (!error)
+                parsedItems = [parser itemsArray];
+        }
+        
+        dispatch_async(dispatch_get_main_queue(), ^{
+            if (weakSelf.activityView)
+                [MBProgressHUD hideProgressForView:weakSelf.activityView];
+            
+            weakSelf.loadingDataInProgress = NO;
+            
+            if (!weakSelf.loadCancelled)
             {
-                completionBlock(nil, [NSError errorWithDomain:@"Data request cancelled" code:DataSourceErrorRequestCancelled userInfo:nil], req);
+                if (completionBlock)
+                    completionBlock(req, parsedItems, error);
             }
             else
             {
-                completionBlock(nil, [NSError errorWithDomain:@"Data request failed" code:DataSourceErrorRequestFailed userInfo:nil], req);
+                NSLog(@"Load cancelled.");
             }
         });
-	}
-	else
-	{
-        __weak NSMutableDictionary *weakParsersDict = _parsersDict;
-
-		dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
-            id <LParserInterface> parser = [[parserClass class] new];
-            [weakParsersDict setObject:parser forKey:[req.url absoluteString]];
-            [parser parseData:req.responseData];
-            [weakParsersDict removeObjectForKey:[req.url absoluteString]];
-            
-            dispatch_async(dispatch_get_main_queue(), ^{
-                if ([parser error])
-                {
-                    completionBlock(nil, parser.error, req);
-                }
-                else
-                {
-                    completionBlock(parser.itemsArray, nil, req);
-                }
-            });
-        });
-	}
+    });
 }
 
 
-#pragma mark - Running request
+#pragma mark - Cancel Load
 
 
-- (BOOL)isRunningRequestForUrl:(NSString *)url
+- (void)cancelLoad
 {
-	ASIHTTPRequest *req = [_requestsDict objectForKey:url];
+    @synchronized(_currentRequest)
+    {
+        [_currentRequest clearDelegatesAndCancel];
+    }
     
-	return req != nil;
-}
-
-
-#pragma mark - Cancel requests
-
-
-- (void)cancelRequestWithUrl:(NSString *)url
-{
-	if (!url)
-	{
-		return;
-	}
+    @synchronized(_currentParser)
+    {
+        [_currentParser abortParsing];
+    }
     
-	ASIHTTPRequest *req = [_requestsDict objectForKey:url];
-    
-	if (req)
-	{
-		[req clearDelegatesAndCancel];
-		[_requestsDict removeObjectForKey:url];
-	}
-    
-	id <LParserInterface> parser = [_parsersDict objectForKey:url];
-    
-	if (parser)
-	{
-		[parser abortParsing];
-		[_parsersDict removeObjectForKey:url];
-	}
-}
-
-
-- (void)cancelRequest:(ASIHTTPRequest *)request
-{
-    [self cancelRequestWithUrl:[request.url absoluteString]];
-}
-
-
-- (void)cancelAllRequests
-{
-	for (ASIHTTPRequest *req in [_requestsDict allValues])
-		[req clearDelegatesAndCancel];
-    
-	[_requestsDict removeAllObjects];
-    
-    for (id <LParserInterface> parser in [_parsersDict allValues])
-        [parser abortParsing];
-    
-    [_parsersDict removeAllObjects];
+    _loadCancelled = YES;
 }
 
 
@@ -311,12 +236,33 @@
 
 
 + (ASIHTTPRequest *)requestWithUrl:(NSString *)url
+                       cachePolicy:(ASICachePolicy)cachePolicy
+                   timeoutInterval:(NSTimeInterval)timeoutInterval
+                    secondsToCache:(NSTimeInterval)secondsToCache
+                           headers:(NSDictionary *)headers
+                        parameters:(NSDictionary *)params
+                     requestMethod:(NSString *)requestMethod
+                       parserClass:(Class)parserClass
+{
+    return [self requestWithUrl:url
+                    cachePolicy:cachePolicy
+                timeoutInterval:timeoutInterval
+                 secondsToCache:secondsToCache
+                        headers:headers
+                     parameters:params
+                  requestMethod:requestMethod
+                       userInfo:@{@"parserClass" : parserClass}];
+}
+
+
++ (ASIHTTPRequest *)requestWithUrl:(NSString *)url
 					   cachePolicy:(ASICachePolicy)cachePolicy
 				   timeoutInterval:(NSTimeInterval)timeoutInterval
 					secondsToCache:(NSTimeInterval)secondsToCache
 						   headers:(NSDictionary *)headers
 						parameters:(NSDictionary *)params
 					 requestMethod:(NSString *)requestMethod
+                          userInfo:(NSDictionary *)userInfo
 {
 	NSString *paramsString = [self queryStringFromParams:params];
 	NSString *urlString = url;
@@ -334,6 +280,7 @@
 	request.requestMethod = requestMethod;
 	request.timeOutSeconds = timeoutInterval;
 	request.secondsToCache = secondsToCache;
+    request.userInfo = userInfo;
     
 	for (NSString *key in [headers allKeys])
 	{
@@ -347,15 +294,6 @@
 	}
     
 	return request;
-}
-
-
-#pragma mark - dealloc
-
-
-- (void)dealloc
-{
-	[self cancelAllRequests];
 }
 
 

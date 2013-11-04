@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>IDESourceControlProjectFavoriteDictionaryKey</key>
+	<false/>
+	<key>IDESourceControlProjectIdentifier</key>
+	<string>0DF5561B-CAF9-4A68-AB62-CEB42C82021D</string>
+	<key>IDESourceControlProjectName</key>
+	<string>LAbstractASIDataSource</string>
+	<key>IDESourceControlProjectOriginsDictionary</key>
+	<dict>
+		<key>75364DFA-11C3-46F5-A0F3-4D934CD38447</key>
+		<string>https://github.com/lukagabric/LAbstractASIDataSource.git</string>
+		<key>D0181011-7656-49ED-839A-93D869D380A0</key>
+		<string>https://github.com/pokeb/asi-http-request.git</string>
+	</dict>
+	<key>IDESourceControlProjectPath</key>
+	<string>LAbstractASIDataSource.xcodeproj/project.xcworkspace</string>
+	<key>IDESourceControlProjectRelativeInstallPathDictionary</key>
+	<dict>
+		<key>75364DFA-11C3-46F5-A0F3-4D934CD38447</key>
+		<string>../..</string>
+		<key>D0181011-7656-49ED-839A-93D869D380A0</key>
+		<string>../../External/ASIHTTPRequest</string>
+	</dict>
+	<key>IDESourceControlProjectURL</key>
+	<string>https://github.com/lukagabric/LAbstractASIDataSource.git</string>
+	<key>IDESourceControlProjectVersion</key>
+	<integer>110</integer>
+	<key>IDESourceControlProjectWCCIdentifier</key>
+	<string>75364DFA-11C3-46F5-A0F3-4D934CD38447</string>
+	<key>IDESourceControlProjectWCConfigurations</key>
+	<array>
+		<dict>
+			<key>IDESourceControlRepositoryExtensionIdentifierKey</key>
+			<string>public.vcs.git</string>
+			<key>IDESourceControlWCCIdentifierKey</key>
+			<string>D0181011-7656-49ED-839A-93D869D380A0</string>
+			<key>IDESourceControlWCCName</key>
+			<string>ASIHTTPRequest</string>
+		</dict>
+		<dict>
+			<key>IDESourceControlRepositoryExtensionIdentifierKey</key>
+			<string>public.vcs.git</string>
+			<key>IDESourceControlWCCIdentifierKey</key>
+			<string>75364DFA-11C3-46F5-A0F3-4D934CD38447</string>
+			<key>IDESourceControlWCCName</key>
+			<string>LAbstractASIDataSource</string>
+		</dict>
+	</array>
+</dict>
+</plist>
