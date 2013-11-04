@@ -71,13 +71,13 @@ __PRAGMA_POP_NO_EXTRA_ARG_WARNINGS \
 	{
         if (_activityView)
             [MBProgressHUD showProgressForView:_activityView];
-
+        
         __weak typeof(self) weakSelf = self;
 		__weak ASIHTTPRequest *req = request;
         
         void (^reqCompletionBlock)(ASIHTTPRequest *asiHttpRequest) = ^(ASIHTTPRequest *asiHttpRequest) {
             weakSelf.currentRequest = nil;
-
+            
             if (weakSelf.activityView)
                 [MBProgressHUD showProgressForView:weakSelf.activityView];
             
@@ -124,7 +124,7 @@ __PRAGMA_POP_NO_EXTRA_ARG_WARNINGS \
         
         __weak typeof(self) weakSelf = self;
 		__weak ASIHTTPRequest *weakReq = request;
-
+        
 		[request setCompletionBlock:^{
             weakSelf.currentRequest = nil;
             
