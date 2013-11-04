@@ -40,6 +40,7 @@
 
 
 - (void)initialize;
+
 - (void)parseDataFromRequest:(ASIHTTPRequest *)req
          withCompletionBlock:(void(^)(ASIHTTPRequest *asiHttpRequest, NSArray *parsedItems, NSError *error))completionBlock;
 
