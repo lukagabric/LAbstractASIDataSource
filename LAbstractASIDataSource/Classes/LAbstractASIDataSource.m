@@ -61,12 +61,11 @@ __PRAGMA_POP_NO_EXTRA_ARG_WARNINGS \
     if (_loadingDataInProgress) return;
     
     _loadingDataInProgress = YES;
-    _loadCancelled = NO;
     
 	if (!request || !request.url)
 	{
-		completionBlock(request, [NSError errorWithDomain:@"Incorrect request parameters, is url nil?" code:400 userInfo:nil]);
-        _loadingDataInProgress = NO;
+        if (completionBlock && !_loadCancelled)
+            completionBlock(request, [NSError errorWithDomain:@"Incorrect request parameters, is url nil?" code:400 userInfo:nil]);
 	}
 	else
 	{
@@ -78,12 +77,12 @@ __PRAGMA_POP_NO_EXTRA_ARG_WARNINGS \
         
         void (^reqCompletionBlock)(ASIHTTPRequest *asiHttpRequest) = ^(ASIHTTPRequest *asiHttpRequest) {
             weakSelf.currentRequest = nil;
-            weakSelf.loadingDataInProgress = NO;
 
             if (weakSelf.activityView)
                 [MBProgressHUD showProgressForView:weakSelf.activityView];
             
-			completionBlock(asiHttpRequest, asiHttpRequest.error);
+            if (completionBlock && !weakSelf.loadCancelled)
+                completionBlock(asiHttpRequest, asiHttpRequest.error);
 		};
         
 		[request setCompletionBlock:^{
@@ -112,12 +111,11 @@ __PRAGMA_POP_NO_EXTRA_ARG_WARNINGS \
     if (_loadingDataInProgress) return;
     
     _loadingDataInProgress = YES;
-    _loadCancelled = NO;
     
 	if (!request || !request.url)
 	{
-		completionBlock(request, nil, [NSError errorWithDomain:@"Incorrect request parameters, is url nil?" code:400 userInfo:nil]);
-        _loadingDataInProgress = NO;
+        if (completionBlock && !_loadCancelled)
+            completionBlock(request, nil, [NSError errorWithDomain:@"Incorrect request parameters, is url nil?" code:400 userInfo:nil]);
 	}
 	else
 	{
@@ -129,13 +127,14 @@ __PRAGMA_POP_NO_EXTRA_ARG_WARNINGS \
 
 		[request setCompletionBlock:^{
             weakSelf.currentRequest = nil;
-            [weakSelf parseDataFromRequest:weakReq withCompletionBlock:completionBlock];
+            
+            if (completionBlock && !weakSelf.loadCancelled)
+                [weakSelf parseDataFromRequest:weakReq withCompletionBlock:completionBlock];
         }];
         
 		[request setFailedBlock:^{
             weakSelf.currentRequest = nil;
-            weakSelf.loadingDataInProgress = NO;
-            if (completionBlock)
+            if (completionBlock && !weakSelf.loadCancelled)
                 completionBlock(weakReq, nil, weakReq.error);
         }];
         
@@ -178,8 +177,6 @@ __PRAGMA_POP_NO_EXTRA_ARG_WARNINGS \
         dispatch_async(dispatch_get_main_queue(), ^{
             if (weakSelf.activityView)
                 [MBProgressHUD hideProgressForView:weakSelf.activityView];
-            
-            weakSelf.loadingDataInProgress = NO;
             
             if (!weakSelf.loadCancelled)
             {
