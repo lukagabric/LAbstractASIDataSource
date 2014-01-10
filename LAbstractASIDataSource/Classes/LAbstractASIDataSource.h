@@ -63,6 +63,16 @@
                            headers:(NSDictionary *)headers
                         parameters:(NSDictionary *)params
                      requestMethod:(NSString *)requestMethod
+                       parserClass:(Class)parserClass
+                    parserUserInfo:(id)parserUserInfo;
+
++ (ASIHTTPRequest *)requestWithUrl:(NSString *)url
+                       cachePolicy:(ASICachePolicy)cachePolicy
+                   timeoutInterval:(NSTimeInterval)timeoutInterval
+                    secondsToCache:(NSTimeInterval)secondsToCache
+                           headers:(NSDictionary *)headers
+                        parameters:(NSDictionary *)params
+                     requestMethod:(NSString *)requestMethod
                           userInfo:(NSDictionary *)userInfo;
 
 

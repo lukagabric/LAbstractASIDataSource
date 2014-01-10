@@ -165,13 +165,15 @@ __PRAGMA_POP_NO_EXTRA_ARG_WARNINGS \
         {
             id <LParserInterface> parser = [[parserClass class] new];
             weakSelf.currentParser = parser;
+            [parser setUserInfo:[req.userInfo objectForKey:@"parserUserInfo"]];
+            [parser setASIHTTPRequest:req];
             [parser parseData:req.responseData];
             weakSelf.currentParser = nil;
             
-            error = [parser error];
+            error = [parser getError];
             
             if (!error)
-                parsedItems = [parser itemsArray];
+                parsedItems = [parser getItemsArray];
         }
         
         dispatch_async(dispatch_get_main_queue(), ^{
@@ -240,6 +242,27 @@ __PRAGMA_POP_NO_EXTRA_ARG_WARNINGS \
                         parameters:(NSDictionary *)params
                      requestMethod:(NSString *)requestMethod
                        parserClass:(Class)parserClass
+                    parserUserInfo:(id)parserUserInfo
+{
+    return [self requestWithUrl:url
+                    cachePolicy:cachePolicy
+                timeoutInterval:timeoutInterval
+                 secondsToCache:secondsToCache
+                        headers:headers
+                     parameters:params
+                  requestMethod:requestMethod
+                       userInfo:@{@"parserClass" : parserClass, @"parserUserInfo" : parserUserInfo}];
+}
+
+
++ (ASIHTTPRequest *)requestWithUrl:(NSString *)url
+                       cachePolicy:(ASICachePolicy)cachePolicy
+                   timeoutInterval:(NSTimeInterval)timeoutInterval
+                    secondsToCache:(NSTimeInterval)secondsToCache
+                           headers:(NSDictionary *)headers
+                        parameters:(NSDictionary *)params
+                     requestMethod:(NSString *)requestMethod
+                       parserClass:(Class)parserClass
 {
     return [self requestWithUrl:url
                     cachePolicy:cachePolicy
@@ -279,10 +302,10 @@ __PRAGMA_POP_NO_EXTRA_ARG_WARNINGS \
 	request.secondsToCache = secondsToCache;
     request.userInfo = userInfo;
     
-	for (NSString *key in [headers allKeys])
-	{
-		[request addRequestHeader:key value:[headers valueForKey:key]];
-	}
+    if (!request.requestHeaders)
+        request.requestHeaders = [NSMutableDictionary new];
+    
+    [request.requestHeaders addEntriesFromDictionary:headers];
     
 	if ([requestMethod isEqualToString:@"POST"] && paramsString)
 	{

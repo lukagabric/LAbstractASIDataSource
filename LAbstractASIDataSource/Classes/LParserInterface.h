@@ -2,8 +2,10 @@
 
 
 - (void)parseData:(NSData *)data;
-- (NSError *)error;
-- (NSArray *)itemsArray;
+- (void)setUserInfo:(id)userInfo;
+- (void)setASIHTTPRequest:(ASIHTTPRequest *)request;
+- (NSError *)getError;
+- (NSArray *)getItemsArray;
 - (void)abortParsing;
 
 
