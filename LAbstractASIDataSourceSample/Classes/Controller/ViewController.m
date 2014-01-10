@@ -5,20 +5,6 @@
 @implementation ViewController
 
 
-#pragma mark -
-
-
-- (id)init
-{
-    self = [super init];
-    if (self)
-    {
-        _newsDataSource = [NewsDataSource new];
-    }
-    return self;
-}
-
-
 #pragma mark - View
 
 
@@ -62,7 +48,12 @@
     self.navigationItem.rightBarButtonItem.enabled = NO;
     
     __weak ViewController *weakSelf = self;
-    
+
+    if (_newsDataSource)
+        [_newsDataSource cancelLoad];
+
+    _newsDataSource = [NewsDataSource new];
+
     [_newsDataSource getNewsItemsWithCompletionBlock:^(ASIHTTPRequest *asiHttpRequest, NSArray *parsedItems, NSError *error) {
         if (error)
         {

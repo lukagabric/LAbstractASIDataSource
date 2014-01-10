@@ -1,15 +1,7 @@
-#import "LParserInterface.h"
+#import "LAbstractParser.h"
 
 
-@interface NewsParser : NSObject <LParserInterface, NSXMLParserDelegate>
-{
-    NSXMLParser *_parser;
-    
-    NSMutableString *_mElementValue;
-
-    NSError *_error;
-    NSMutableArray *_items;
-}
+@interface NewsParser : LAbstractParser
 
 
 @end

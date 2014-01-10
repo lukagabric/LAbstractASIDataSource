@@ -1,3 +1,6 @@
+#import "ASIHTTPRequest.h"
+
+
 @protocol LParserInterface <NSObject>
 
 
