@@ -1,70 +1,47 @@
 LAbstractASIDataSource
 ======================
 
-iOS Data Source is used to simplify the process of getting data from web. See LAbstractASIDataSourceSample which shows how to get an rss feed, parse the xml and present collected data. The data source implementation itself is in the LAbstractASIDataSource class and LParserInterface.h defines a protocol that the parser must conform to.
+iOS Data Source is used to simplify the process of getting remote data. See LAbstractASIDataSourceSample which shows how to get an rss feed, parse the xml and present collected data. The data source implementation itself is in the LAbstractASIDataSource class and LParserInterface.h defines a protocol that the parser must conform to.
 
 ASIHTTPRequest is used for data download.
 
 The idea is to use the data source by calling a method of the structure below. The data is downloaded, parsed and then the completion block is called.
 
-    [_newsDataSource getNewsItemsWithCompletionBlock:^(NSArray *items, NSError *error, NSDictionary *userInfo) {
-        if (error)
-        {
-            //handle error
-        }
-        else
-        {
-            //use items
-        }
-    }];
-
-Implementation sample
----------------------
-
-Before you start with the data source you need the data parser that conforms to LParserInterface protocol.
-
-Subclass LAbstractASIDataSource class as in NewsDataSource class of the sample project. In that class, three methods are implemented. These methods are convenient, and used to get data from e.g. UIViewController where you want to present this data.
-
-First method just returns the data url.
-
-    - (NSString *)newsItemsUrl
+    - (ASIHTTPRequest *)newsRequest
     {
-        return @"http://feeds.bbci.co.uk/news/rss.xml";
+        return [NewsDataSource requestWithUrl:@"http://feeds.bbci.co.uk/news/rss.xml"
+                                  cachePolicy:ASIAskServerIfModifiedCachePolicy
+                              timeoutInterval:15
+                               secondsToCache:20
+                                      headers:nil
+                                   parameters:nil
+                                requestMethod:@"GET"
+                                  parserClass:[NewsParser class]];
     }
 
-Second method uses method implemented in the super class LAbstractASIDataSource. There are a number of parameters to be defined. Among them is the parser class which will be used to parse the data and return the parsed entities. It must conform to LParserInterface. The completion block is passed in as a parameter and it will be executed after the request is finish and the data is parsed.
 
-    - (void)getNewsItemsWithCompletionBlock:(void(^)(NSArray *items, NSError *error, NSDictionary *userInfo))completionBlock
+    - (void)getNewsItemsWithCompletionBlock:(void(^)(ASIHTTPRequest *asiHttpRequest, NSArray *parsedItems, NSError *error))completionBlock
     {
-        [self getDataWithUrl:[self newsItemsUrl]
-                 cachePolicy:ASIAskServerIfModifiedWhenStaleCachePolicy
-             timeoutInterval:20
-              secondsToCache:10
-                     headers:nil
-                  parameters:nil
-               requestMethod:@"GET"
-                 parserClass:[NewsParser class]
-           completionBlock:^(NSArray *items, NSError *error, NSDictionary *dictionary) {
-              completionBlock(items, error, dictionary);
-        }];
+        [self getObjectsWithRequest:[self newsRequest] andCompletionBlock:completionBlock];
+    }
+    
+LAbstractParser
+---------------
+
+Abstract parser implements core parsing methods and allows to start binding data right away. The methods below are called on element start/end and data collected is stored in member variables. There are convenient macros used to bind data quickly, including binding strings, numbers, dates, primitives etc.
+
+    - (void)didStartElement
+    {
+        ifElement(@"item")
+        {
+            _item = [NewsItem new];
+            [_items addObject:_item];
+        }
     }
 
-The third method is used to cancel the request.
 
-    - (void)cancelNewsItemsRequest
+    - (void)didEndElement
     {
-        [self cancelRequestWithUrl:[self newsItemsUrl]];
+        ifElement(@"title") bindStr(_item.title);
+        elifElement(@"description") bindStr(_item.description);
     }
-
-Now data can be used in e.g. view controller which owns an instance of data source class. As shown in the sample project:
-
-    [_newsDataSource getNewsItemsWithCompletionBlock:^(NSArray *items, NSError *error, NSDictionary *userInfo) {
-        if (error)
-        {
-            //handle error
-        }
-        else
-        {
-            //use items
-        }
-    }];
