@@ -44,6 +44,9 @@
 - (void)parseDataFromRequest:(ASIHTTPRequest *)req
          withCompletionBlock:(void(^)(ASIHTTPRequest *asiHttpRequest, NSArray *parsedItems, NSError *error))completionBlock;
 
+- (void)showProgressForActivityView;
+- (void)hideProgressForActivityView;
+
 
 + (NSString *)queryStringFromParams:(NSDictionary *)dict;
 

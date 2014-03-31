@@ -79,7 +79,9 @@
 - (void)parser:(NSXMLParser *)parser parseErrorOccurred:(NSError *)parseError
 {
 	_error = parseError;
-	NSLog(@"%@", [NSString stringWithFormat:@"Parsing error code %i, %@, at line: %i, column: %i", [parseError code], [[parser parserError] localizedDescription], [parser lineNumber], [parser columnNumber]]);
+#if DEBUG
+	NSLog(@"%@", [NSString stringWithFormat:@"Parsing error code %ld, %@, at line: %ld, column: %ld", (long)[parseError code], [[parser parserError] localizedDescription], (long)[parser lineNumber], (long)[parser columnNumber]]);
+#endif
 }
 
 

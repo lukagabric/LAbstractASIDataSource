@@ -1,5 +1,5 @@
 #import "LAbstractASIDataSource.h"
-#import "MBProgressHUD+L.h"
+#import "MBProgressHUD.h"
 
 
 #pragma mark - DSAssert
@@ -70,7 +70,7 @@ __PRAGMA_POP_NO_EXTRA_ARG_WARNINGS \
 	else
 	{
         if (_activityView)
-            [MBProgressHUD showProgressForView:_activityView];
+            [self showProgressForActivityView];
         
         __weak typeof(self) weakSelf = self;
 		__weak ASIHTTPRequest *req = request;
@@ -79,7 +79,7 @@ __PRAGMA_POP_NO_EXTRA_ARG_WARNINGS \
             weakSelf.currentRequest = nil;
             
             if (weakSelf.activityView)
-                [MBProgressHUD showProgressForView:weakSelf.activityView];
+                [weakSelf showProgressForActivityView];
             
             if (completionBlock && !weakSelf.loadCancelled)
                 completionBlock(asiHttpRequest, asiHttpRequest.error);
@@ -120,7 +120,7 @@ __PRAGMA_POP_NO_EXTRA_ARG_WARNINGS \
 	else
 	{
         if (_activityView)
-            [MBProgressHUD showProgressForView:_activityView];
+            [self showProgressForActivityView];
         
         __weak typeof(self) weakSelf = self;
 		__weak ASIHTTPRequest *weakReq = request;
@@ -178,7 +178,7 @@ __PRAGMA_POP_NO_EXTRA_ARG_WARNINGS \
         
         dispatch_async(dispatch_get_main_queue(), ^{
             if (weakSelf.activityView)
-                [MBProgressHUD hideProgressForView:weakSelf.activityView];
+                [weakSelf hideProgressForActivityView];
             
             if (!weakSelf.loadCancelled)
             {
@@ -210,6 +210,29 @@ __PRAGMA_POP_NO_EXTRA_ARG_WARNINGS \
     }
     
     _loadCancelled = YES;
+}
+
+
+#pragma mark - Progress
+
+
+- (void)showProgressForActivityView
+{
+    NSArray *huds = [MBProgressHUD allHUDsForView:_activityView];
+    
+    if (huds && [huds count] == 0)
+    {
+        MBProgressHUD *hud = [[MBProgressHUD alloc] initWithView:_activityView];
+        hud.dimBackground = YES;
+        [_activityView addSubview:hud];
+        [hud show:YES];
+    }
+}
+
+
+- (void)hideProgressForActivityView
+{
+    [MBProgressHUD hideAllHUDsForView:_activityView animated:YES];
 }
 
 

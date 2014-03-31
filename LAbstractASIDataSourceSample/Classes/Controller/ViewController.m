@@ -53,6 +53,7 @@
         [_newsDataSource cancelLoad];
 
     _newsDataSource = [NewsDataSource new];
+    _newsDataSource.activityView = self.view;
 
     [_newsDataSource getNewsItemsWithCompletionBlock:^(ASIHTTPRequest *asiHttpRequest, NSArray *parsedItems, NSError *error) {
         if (error)
