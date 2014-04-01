@@ -4,7 +4,7 @@
 @protocol LParserInterface <NSObject>
 
 
-- (void)parseData:(NSData *)data;
+- (void)parseData:(id)data;
 - (void)setUserInfo:(id)userInfo;
 - (void)setASIHTTPRequest:(ASIHTTPRequest *)request;
 - (NSError *)getError;

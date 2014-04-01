@@ -35,7 +35,7 @@
 #pragma mark - Parse data
 
 
-- (void)parseData:(NSData *)data
+- (void)parseData:(id)data
 {
 	if (data && !_parser && !_error)
 	{
