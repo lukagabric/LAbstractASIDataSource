@@ -10,7 +10,15 @@
 @implementation LAbstractJSONParser
 
 
-#pragma mark - Parse data
+#pragma mark - Static methods
+
+
++ (NSArray *)objectsForData:(id)data
+{
+    LAbstractJSONParser *parser = [[self class] new];
+    [parser parseData:data];
+    return [parser getItemsArray];
+}
 
 
 - (void)parseData:(id)data
@@ -29,17 +37,38 @@
             
             _error = error;
         }
+        else
+        {
+            jsonObject = data;
+        }
 
         if (jsonObject)
         {
-            if ([jsonObject isKindOfClass:[NSDictionary class]])
+            _rootJsonObject = jsonObject;
+            
+            NSString *rootKeyPath = [self getRootKeyPath];
+            
+            if (rootKeyPath)
+                _rootJsonObject = [jsonObject valueForKeyPath:rootKeyPath];
+            
+            if (_rootJsonObject)
             {
-                _dict = jsonObject;
-                [self bindObject];
-            }
-            else if ([jsonObject isKindOfClass:[NSArray class]])
-            {
-                [self bindObjectsFromArray:jsonObject];
+                if ([_rootJsonObject isKindOfClass:[NSDictionary class]])
+                {
+                    _currentElement = _rootJsonObject;
+                    [self bindObject];
+                }
+                else if ([_rootJsonObject isKindOfClass:[NSArray class]])
+                {
+                    for (id item in _rootJsonObject)
+                    {
+                        if ([item isKindOfClass:[NSDictionary class]])
+                        {
+                            _currentElement = item;
+                            [self bindObject];
+                        }
+                    }
+                }
             }
         }
 	}
@@ -50,22 +79,9 @@
 }
 
 
-- (void)bindObjectsFromArray:(NSArray *)array
-{
-    for (id item in array)
-    {
-        if ([item isKindOfClass:[NSDictionary class]])
-        {
-            _dict = item;
-            [self bindObject];
-        }
-    }
-}
-
-
 - (void)bindObject
 {
-    
+
 }
 
 
@@ -108,6 +124,12 @@
 - (NSError *)getError
 {
     return _error;
+}
+
+
+- (NSString *)getRootKeyPath
+{
+    return nil;
 }
 
 

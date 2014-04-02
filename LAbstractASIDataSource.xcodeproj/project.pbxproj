@@ -8,6 +8,7 @@
 
 /* Begin PBXBuildFile section */
 		410FAD9A1880392F00B1F6E0 /* LAbstractParser.m in Sources */ = {isa = PBXBuildFile; fileRef = 410FAD991880392F00B1F6E0 /* LAbstractParser.m */; };
+		41511E0F18EBDEC100B23CA1 /* NewsJSONParser.m in Sources */ = {isa = PBXBuildFile; fileRef = 41511E0E18EBDEC100B23CA1 /* NewsJSONParser.m */; };
 		419D8C6C1827DB440060F964 /* MBProgressHUD.m in Sources */ = {isa = PBXBuildFile; fileRef = 419D8C691827DB440060F964 /* MBProgressHUD.m */; };
 		41F01AE318EAEBA600B9A48C /* LAbstractJSONParser.m in Sources */ = {isa = PBXBuildFile; fileRef = 41F01AE218EAEBA600B9A48C /* LAbstractJSONParser.m */; };
 		A1544A3816A9E1F70027F57A /* ASIAuthenticationDialog.m in Sources */ = {isa = PBXBuildFile; fileRef = A1544A2516A9E1F70027F57A /* ASIAuthenticationDialog.m */; settings = {COMPILER_FLAGS = "-fno-objc-arc"; }; };
@@ -62,6 +63,8 @@
 /* Begin PBXFileReference section */
 		410FAD981880392F00B1F6E0 /* LAbstractParser.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LAbstractParser.h; sourceTree = "<group>"; };
 		410FAD991880392F00B1F6E0 /* LAbstractParser.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LAbstractParser.m; sourceTree = "<group>"; };
+		41511E0D18EBDEC100B23CA1 /* NewsJSONParser.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NewsJSONParser.h; sourceTree = "<group>"; };
+		41511E0E18EBDEC100B23CA1 /* NewsJSONParser.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = NewsJSONParser.m; sourceTree = "<group>"; };
 		419D8C681827DB440060F964 /* MBProgressHUD.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MBProgressHUD.h; sourceTree = "<group>"; };
 		419D8C691827DB440060F964 /* MBProgressHUD.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MBProgressHUD.m; sourceTree = "<group>"; };
 		41F01AE118EAEBA600B9A48C /* LAbstractJSONParser.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LAbstractJSONParser.h; sourceTree = "<group>"; };
@@ -199,6 +202,8 @@
 				A1544A6216A9EA5F0027F57A /* NewsItem.m */,
 				A1544A6716A9EA8A0027F57A /* NewsParser.h */,
 				A1544A6816A9EA8A0027F57A /* NewsParser.m */,
+				41511E0D18EBDEC100B23CA1 /* NewsJSONParser.h */,
+				41511E0E18EBDEC100B23CA1 /* NewsJSONParser.m */,
 				A1D307F516A9EB8000088B5D /* NewsDataSource.h */,
 				A1D307F616A9EB8100088B5D /* NewsDataSource.m */,
 			);
@@ -416,6 +421,7 @@
 				A1544A6516A9EA5F0027F57A /* NewsItem.m in Sources */,
 				A1544A6916A9EA8A0027F57A /* NewsParser.m in Sources */,
 				A1D307F716A9EB8100088B5D /* NewsDataSource.m in Sources */,
+				41511E0F18EBDEC100B23CA1 /* NewsJSONParser.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

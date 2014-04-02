@@ -4,10 +4,10 @@
 //
 
 
-#import "NewsItem.h"
+#import "LAbstractJSONParser.h"
 
 
-@implementation NewsItem
+@interface NewsJSONParser : LAbstractJSONParser
 
 
 @end
