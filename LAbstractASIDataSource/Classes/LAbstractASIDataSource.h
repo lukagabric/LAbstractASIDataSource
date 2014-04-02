@@ -53,6 +53,8 @@
 - (void)showProgressForActivityView;
 - (void)hideProgressForActivityView;
 
+- (BOOL)shouldProcessResponseForRequest:(ASIHTTPRequest *)request;
+
 
 + (NSString *)queryStringFromParams:(NSDictionary *)dict;
 

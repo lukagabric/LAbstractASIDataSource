@@ -84,11 +84,14 @@ __PRAGMA_POP_NO_EXTRA_ARG_WARNINGS \
         void (^reqCompletionBlock)(ASIHTTPRequest *asiHttpRequest) = ^(ASIHTTPRequest *asiHttpRequest) {
             weakSelf.currentRequest = nil;
             
-            if (weakSelf.activityView)
-                [weakSelf showProgressForActivityView];
+            if ([weakSelf shouldProcessResponseForRequest:asiHttpRequest])
+            {
+                if (weakSelf.activityView)
+                    [weakSelf showProgressForActivityView];
             
-            if (completionBlock && !weakSelf.loadCancelled)
-                completionBlock(asiHttpRequest, asiHttpRequest.error);
+                if (completionBlock && !weakSelf.loadCancelled)
+                    completionBlock(asiHttpRequest, asiHttpRequest.error);
+            }
 		};
         
 		[request setCompletionBlock:^{
@@ -133,8 +136,8 @@ __PRAGMA_POP_NO_EXTRA_ARG_WARNINGS \
         
 		[request setCompletionBlock:^{
             weakSelf.currentRequest = nil;
-            
-            if (completionBlock && !weakSelf.loadCancelled)
+
+            if ([weakSelf shouldProcessResponseForRequest:weakReq] && completionBlock && !weakSelf.loadCancelled)
                 [weakSelf parseDataFromRequest:weakReq withCompletionBlock:completionBlock];
         }];
         
@@ -197,6 +200,15 @@ __PRAGMA_POP_NO_EXTRA_ARG_WARNINGS \
             }
         });
     });
+}
+
+
+#pragma mark - Should process data for request
+
+
+- (BOOL)shouldProcessResponseForRequest:(ASIHTTPRequest *)request
+{
+    return YES;
 }
 
 
