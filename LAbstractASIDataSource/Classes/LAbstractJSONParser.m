@@ -21,6 +21,9 @@
 }
 
 
+#pragma mark - Parser data
+
+
 - (void)parseData:(id)data
 {
 	if (data)
@@ -77,6 +80,9 @@
 		_error = [NSError errorWithDomain:@"No data" code:0 userInfo:nil];
 	}
 }
+
+
+#pragma mark - Bind object
 
 
 - (void)bindObject
