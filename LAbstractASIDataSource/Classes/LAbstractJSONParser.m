@@ -21,6 +21,30 @@
 }
 
 
+#pragma mark - init
+
+
+- (id)init
+{
+    self = [super init];
+    if (self)
+    {
+        [self initialize];
+    }
+    return self;
+}
+
+
+- (void)initialize
+{
+    _dateTimeFormatter = [NSDateFormatter new];
+    _dateTimeFormatter.dateFormat = [self getDateTimeFormat];
+    
+    _dateFormatter = [NSDateFormatter new];
+    _dateFormatter.dateFormat = [self getDateFormat];
+}
+
+
 #pragma mark - Parser data
 
 
