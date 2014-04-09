@@ -46,6 +46,8 @@
 @interface LAbstractJSONParser ()
 
 
+- (void)initialize;
+
 - (void)bindObject;
 
 - (NSString *)getDateTimeFormat;
