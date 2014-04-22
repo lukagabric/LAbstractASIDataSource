@@ -71,7 +71,10 @@ __PRAGMA_POP_NO_EXTRA_ARG_WARNINGS \
 	if (!request || !request.url)
 	{
         if (completionBlock && !_loadCancelled)
+        {
+            [self hideProgressForActivityView];
             completionBlock(request, [NSError errorWithDomain:@"Incorrect request parameters, is url nil?" code:400 userInfo:nil]);
+        }
 	}
 	else
 	{
@@ -124,7 +127,10 @@ __PRAGMA_POP_NO_EXTRA_ARG_WARNINGS \
 	if (!request || !request.url)
 	{
         if (completionBlock && !_loadCancelled)
+        {
+            [self hideProgressForActivityView];
             completionBlock(request, nil, [NSError errorWithDomain:@"Incorrect request parameters, is url nil?" code:400 userInfo:nil]);
+        }
 	}
 	else
 	{
@@ -144,7 +150,10 @@ __PRAGMA_POP_NO_EXTRA_ARG_WARNINGS \
 		[request setFailedBlock:^{
             weakSelf.currentRequest = nil;
             if (completionBlock && !weakSelf.loadCancelled)
+            {
+                [self hideProgressForActivityView];
                 completionBlock(weakReq, nil, weakReq.error);
+            }
         }];
         
         _currentRequest = request;
@@ -186,8 +195,7 @@ __PRAGMA_POP_NO_EXTRA_ARG_WARNINGS \
         }
         
         dispatch_async(dispatch_get_main_queue(), ^{
-            if (weakSelf.activityView)
-                [weakSelf hideProgressForActivityView];
+            [weakSelf hideProgressForActivityView];
             
             if (!weakSelf.loadCancelled)
             {
@@ -250,7 +258,8 @@ __PRAGMA_POP_NO_EXTRA_ARG_WARNINGS \
 
 - (void)hideProgressForActivityView
 {
-    [MBProgressHUD hideAllHUDsForView:_activityView animated:YES];
+    if (_activityView)
+        [MBProgressHUD hideAllHUDsForView:_activityView animated:YES];
 }
 
 
