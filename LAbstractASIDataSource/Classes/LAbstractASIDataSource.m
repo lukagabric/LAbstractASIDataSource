@@ -198,30 +198,24 @@
 
 - (void)loadDidFinishWithError:(NSError *)error cancelled:(BOOL)cancelled
 {
-    @synchronized(self)
-    {
-        _finished = YES;
-        _running = NO;
-        _canceled = cancelled;
-        _error = error;
-        
-        if (self.dataCompletionBlock)
-            self.dataCompletionBlock(_request, error);
-        else if (self.objectsCompletionBlock)
-            self.objectsCompletionBlock(_request, _parsedItems, error);
-    }
+    _finished = YES;
+    _running = NO;
+    _canceled = cancelled;
+    _error = error;
+    
+    if (self.dataCompletionBlock)
+        self.dataCompletionBlock(_request, error);
+    else if (self.objectsCompletionBlock)
+        self.objectsCompletionBlock(_request, _parsedItems, error);
 }
 
 
 - (void)loadDidStart
 {
-    @synchronized(self)
-    {
-        _finished = NO;
-        _running = YES;
-        _canceled = NO;
-        _error = nil;
-    }
+    _finished = NO;
+    _running = YES;
+    _canceled = NO;
+    _error = nil;
 }
 
 
@@ -230,13 +224,16 @@
 
 - (void)cancelLoad
 {
-    @synchronized(self)
+    if (![[NSThread currentThread] isMainThread])
     {
-        [_request clearDelegatesAndCancel];
-        [_parser abortParsing];
-        
-        [self loadDidFinishWithError:nil cancelled:YES];
+        [self performSelectorOnMainThread:@selector(cancelLoad) withObject:nil waitUntilDone:NO];
+        return;
     }
+    
+    [_request clearDelegatesAndCancel];
+    [_parser abortParsing];
+    
+    [self loadDidFinishWithError:nil cancelled:YES];
 }
 
 
