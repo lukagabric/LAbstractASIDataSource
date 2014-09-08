@@ -40,8 +40,7 @@
 #pragma mark - Get data
 
 
-- (void)getDataWithRequest:(ASIHTTPRequest *)request
-        andCompletionBlock:(void (^)(ASIHTTPRequest *asiHttpRequest, NSError *error))completionBlock
+- (void)getDataWithRequest:(ASIHTTPRequest *)request andCompletionBlock:(DataCompletionBlock)completionBlock
 {
     NSAssert([[NSThread currentThread] isMainThread], @"This method must be called on the main thread.");
     
@@ -95,8 +94,7 @@
 #pragma mark - Get and parse data
 
 
-- (void)getObjectsWithRequest:(ASIHTTPRequest *)request
-           andCompletionBlock:(void(^)(ASIHTTPRequest *asiHttpRequest, NSArray *parsedItems, NSError *error))completionBlock
+- (void)getObjectsWithRequest:(ASIHTTPRequest *)request andCompletionBlock:(ObjectsCompletionBlock)completionBlock
 {
     NSAssert([[NSThread currentThread] isMainThread], @"This method must be called on the main thread.");
     
