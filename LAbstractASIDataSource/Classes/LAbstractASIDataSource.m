@@ -8,25 +8,6 @@
 #import "MBProgressHUD.h"
 
 
-#pragma mark - DSAssert
-
-
-#if DEBUG
-#define DSAssert(condition, desc, ...)	\
-do {				\
-__PRAGMA_PUSH_NO_EXTRA_ARG_WARNINGS \
-if (!(condition)) {		\
-[[NSAssertionHandler currentHandler] handleFailureInMethod:_cmd \
-object:self file:[NSString stringWithUTF8String:__FILE__] \
-lineNumber:__LINE__ description:(desc), ##__VA_ARGS__]; \
-}				\
-__PRAGMA_POP_NO_EXTRA_ARG_WARNINGS \
-} while(0)
-#else
-#define DSAssert(condition, desc, ...)
-#endif
-
-
 @implementation LAbstractASIDataSource
 
 
@@ -62,18 +43,21 @@ __PRAGMA_POP_NO_EXTRA_ARG_WARNINGS \
 - (void)getDataWithRequest:(ASIHTTPRequest *)request
         andCompletionBlock:(void (^)(ASIHTTPRequest *asiHttpRequest, NSError *error))completionBlock
 {
-    DSAssert([[NSThread currentThread] isMainThread], @"This method must be called on the main thread.");
+    NSAssert([[NSThread currentThread] isMainThread], @"This method must be called on the main thread.");
     
-    if (_loadingDataInProgress) return;
+    if (_running || _finished) return;
     
-    _loadingDataInProgress = YES;
+    self.dataCompletionBlock = completionBlock;
+    _request = request;
     
-	if (!request || !request.url)
+    [self loadDidStart];
+    
+	if (!_request || !_request.url)
 	{
-        if (completionBlock && !_loadCancelled)
+        if (!_canceled)
         {
             [self hideProgressForActivityView];
-            completionBlock(request, [NSError errorWithDomain:@"Incorrect request parameters, is url nil?" code:400 userInfo:nil]);
+            [self loadDidFinishWithError:[NSError errorWithDomain:@"Incorrect request parameters, is url nil?" code:400 userInfo:nil] cancelled:NO];
         }
 	}
 	else
@@ -82,32 +66,28 @@ __PRAGMA_POP_NO_EXTRA_ARG_WARNINGS \
             [self showProgressForActivityView];
         
         __weak typeof(self) weakSelf = self;
-		__weak ASIHTTPRequest *req = request;
+		__weak ASIHTTPRequest *req = _request;
         
         void (^reqCompletionBlock)(ASIHTTPRequest *asiHttpRequest) = ^(ASIHTTPRequest *asiHttpRequest) {
-            weakSelf.currentRequest = nil;
-            
-            if ([weakSelf shouldProcessResponseForRequest:asiHttpRequest])
+            if ([weakSelf isResponseValid])
             {
                 if (weakSelf.activityView)
                     [weakSelf showProgressForActivityView];
             
-                if (completionBlock && !weakSelf.loadCancelled)
-                    completionBlock(asiHttpRequest, asiHttpRequest.error);
+                if (!weakSelf.canceled)
+                    [weakSelf loadDidFinishWithError:asiHttpRequest.error cancelled:NO];
             }
 		};
         
-		[request setCompletionBlock:^{
+		[_request setCompletionBlock:^{
             reqCompletionBlock(req);
         }];
         
-		[request setFailedBlock:^{
+		[_request setFailedBlock:^{
             reqCompletionBlock(req);
         }];
-        
-        _currentRequest = request;
-        
-        [request startAsynchronous];
+                
+        [_request startAsynchronous];
 	}
 }
 
@@ -118,18 +98,21 @@ __PRAGMA_POP_NO_EXTRA_ARG_WARNINGS \
 - (void)getObjectsWithRequest:(ASIHTTPRequest *)request
            andCompletionBlock:(void(^)(ASIHTTPRequest *asiHttpRequest, NSArray *parsedItems, NSError *error))completionBlock
 {
-    DSAssert([[NSThread currentThread] isMainThread], @"This method must be called on the main thread.");
+    NSAssert([[NSThread currentThread] isMainThread], @"This method must be called on the main thread.");
     
-    if (_loadingDataInProgress) return;
+    if (_running || _finished) return;
     
-    _loadingDataInProgress = YES;
+    self.objectsCompletionBlock = completionBlock;
+    _request = request;
+
+    [self loadDidStart];
     
-	if (!request || !request.url)
+	if (!_request || !_request.url)
 	{
-        if (completionBlock && !_loadCancelled)
+        if (!_canceled)
         {
             [self hideProgressForActivityView];
-            completionBlock(request, nil, [NSError errorWithDomain:@"Incorrect request parameters, is url nil?" code:400 userInfo:nil]);
+            [self loadDidFinishWithError:[NSError errorWithDomain:@"Incorrect request parameters, is url nil?" code:400 userInfo:nil] cancelled:NO];
         }
 	}
 	else
@@ -138,27 +121,22 @@ __PRAGMA_POP_NO_EXTRA_ARG_WARNINGS \
             [self showProgressForActivityView];
         
         __weak typeof(self) weakSelf = self;
-		__weak ASIHTTPRequest *weakReq = request;
+		__weak ASIHTTPRequest *weakReq = _request;
         
-		[request setCompletionBlock:^{
-            weakSelf.currentRequest = nil;
-
-            if ([weakSelf shouldProcessResponseForRequest:weakReq] && completionBlock && !weakSelf.loadCancelled)
-                [weakSelf parseDataFromRequest:weakReq withCompletionBlock:completionBlock];
+		[_request setCompletionBlock:^{
+            if ([weakSelf isResponseValid] && weakSelf.objectsCompletionBlock && !weakSelf.canceled)
+                [weakSelf parseData];
         }];
         
-		[request setFailedBlock:^{
-            weakSelf.currentRequest = nil;
-            if (completionBlock && !weakSelf.loadCancelled)
+		[_request setFailedBlock:^{
+            if (!weakSelf.canceled)
             {
-                [self hideProgressForActivityView];
-                completionBlock(weakReq, nil, weakReq.error);
+                [weakSelf hideProgressForActivityView];
+                [weakSelf loadDidFinishWithError:weakReq.error cancelled:NO];
             }
         }];
         
-        _currentRequest = request;
-        
-        [request startAsynchronous];
+        [_request startAsynchronous];
 	}
 }
 
@@ -166,41 +144,38 @@ __PRAGMA_POP_NO_EXTRA_ARG_WARNINGS \
 #pragma mark - Parse data
 
 
-- (void)parseDataFromRequest:(ASIHTTPRequest *)req
-         withCompletionBlock:(void(^)(ASIHTTPRequest *asiHttpRequest, NSArray *parsedItems, NSError *error))completionBlock
+- (void)parseData
 {
     __weak typeof(self) weakSelf = self;
     
     dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
+        ASIHTTPRequest *req = weakSelf.request;
         Class parserClass = [req.userInfo objectForKey:@"parserClass"];
         
-        DSAssert(parserClass, @"Parser class must be set with the request");
+        NSAssert(parserClass, @"Parser class must be set with the request");
         
-        NSError *error;
-        NSArray *parsedItems;
+        NSError *parserError;
         
-        if (!weakSelf.loadCancelled)
+        if (!weakSelf.canceled)
         {
             id <LParserInterface> parser = [[parserClass class] new];
-            weakSelf.currentParser = parser;
+            weakSelf.parser = parser;
             [parser setUserInfo:[req.userInfo objectForKey:@"parserUserInfo"]];
             [parser setASIHTTPRequest:req];
             [parser parseData:req.responseData];
-            weakSelf.currentParser = nil;
             
-            error = [parser getError];
+            parserError = [parser getError];
             
-            if (!error)
-                parsedItems = [parser getItemsArray];
+            if (!parserError)
+                weakSelf.parsedItems = [parser getItemsArray];
         }
         
         dispatch_async(dispatch_get_main_queue(), ^{
             [weakSelf hideProgressForActivityView];
             
-            if (!weakSelf.loadCancelled)
+            if (!weakSelf.canceled)
             {
-                if (completionBlock)
-                    completionBlock(req, parsedItems, error);
+                [weakSelf loadDidFinishWithError:parserError cancelled:NO];
             }
             else
             {
@@ -211,12 +186,44 @@ __PRAGMA_POP_NO_EXTRA_ARG_WARNINGS \
 }
 
 
-#pragma mark - Should process data for request
+#pragma mark - Is response valid
 
 
-- (BOOL)shouldProcessResponseForRequest:(ASIHTTPRequest *)request
+- (BOOL)isResponseValid
 {
     return YES;
+}
+
+
+#pragma mark - Status
+
+
+- (void)loadDidFinishWithError:(NSError *)error cancelled:(BOOL)cancelled
+{
+    @synchronized(self)
+    {
+        _finished = YES;
+        _running = NO;
+        _canceled = cancelled;
+        _error = error;
+        
+        if (self.dataCompletionBlock)
+            self.dataCompletionBlock(_request, error);
+        else if (self.objectsCompletionBlock)
+            self.objectsCompletionBlock(_request, _parsedItems, error);
+    }
+}
+
+
+- (void)loadDidStart
+{
+    @synchronized(self)
+    {
+        _finished = NO;
+        _running = YES;
+        _canceled = NO;
+        _error = nil;
+    }
 }
 
 
@@ -225,17 +232,13 @@ __PRAGMA_POP_NO_EXTRA_ARG_WARNINGS \
 
 - (void)cancelLoad
 {
-    @synchronized(_currentRequest)
+    @synchronized(self)
     {
-        [_currentRequest clearDelegatesAndCancel];
+        [_request clearDelegatesAndCancel];
+        [_parser abortParsing];
+        
+        [self loadDidFinishWithError:nil cancelled:YES];
     }
-    
-    @synchronized(_currentParser)
-    {
-        [_currentParser abortParsing];
-    }
-    
-    _loadCancelled = YES;
 }
 
 

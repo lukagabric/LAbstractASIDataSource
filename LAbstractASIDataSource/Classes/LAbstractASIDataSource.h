@@ -9,21 +9,29 @@
 #import "LParserInterface.h"
 
 
+typedef void(^DataCompletionBlock)(ASIHTTPRequest *asiHttpRequest, NSError *error);
+typedef void(^ObjectsCompletionBlock)(ASIHTTPRequest *asiHttpRequest, NSArray *parsedItems, NSError *error);
+
+
 @interface LAbstractASIDataSource : NSObject
 
 
+@property (readonly, atomic) BOOL finished;
+@property (readonly, atomic) BOOL running;
+@property (readonly, atomic) BOOL canceled;
+@property (readonly, atomic) NSError *error;
+
 @property (weak, nonatomic) UIView *activityView;
+
+@property (readonly, nonatomic) ASIHTTPRequest *request;
+@property (readonly, nonatomic) NSArray *parsedItems;
 
 
 #pragma mark - Get data/objects
 
 
-- (void)getDataWithRequest:(ASIHTTPRequest *)request
-        andCompletionBlock:(void (^)(ASIHTTPRequest *asiHttpRequest, NSError *error))completionBlock;
-
-- (void)getObjectsWithRequest:(ASIHTTPRequest *)request
-           andCompletionBlock:(void(^)(ASIHTTPRequest *asiHttpRequest, NSArray *parsedItems, NSError *error))completionBlock;
-
+- (void)getDataWithRequest:(ASIHTTPRequest *)request andCompletionBlock:(DataCompletionBlock)completionBlock;
+- (void)getObjectsWithRequest:(ASIHTTPRequest *)request andCompletionBlock:(ObjectsCompletionBlock)completionBlock;
 - (void)cancelLoad;
 
 
@@ -39,21 +47,20 @@
 @interface LAbstractASIDataSource ()
 
 
-@property (assign, nonatomic) BOOL loadingDataInProgress;
-@property (assign, nonatomic) BOOL loadCancelled;
-@property (weak, nonatomic) ASIHTTPRequest *currentRequest;
-@property (weak, nonatomic) id <LParserInterface> currentParser;
+@property (strong, nonatomic) ASIHTTPRequest *request;
+@property (strong, nonatomic) id <LParserInterface> parser;
+@property (strong, nonatomic) NSArray *parsedItems;
+@property (copy, nonatomic) DataCompletionBlock dataCompletionBlock;
+@property (copy, nonatomic) ObjectsCompletionBlock objectsCompletionBlock;
 
 
 - (void)initialize;
 
-- (void)parseDataFromRequest:(ASIHTTPRequest *)req
-         withCompletionBlock:(void(^)(ASIHTTPRequest *asiHttpRequest, NSArray *parsedItems, NSError *error))completionBlock;
+- (void)parseData;
+- (BOOL)isResponseValid;
 
 - (void)showProgressForActivityView;
 - (void)hideProgressForActivityView;
-
-- (BOOL)shouldProcessResponseForRequest:(ASIHTTPRequest *)request;
 
 
 + (NSString *)queryStringFromParams:(NSDictionary *)dict;
