@@ -5,6 +5,7 @@
 
 
 #import "LASIDataSource.h"
+#import "PromiseKit.h"
 
 
 @interface LASIDataSource (PromiseKit)
