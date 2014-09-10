@@ -229,6 +229,8 @@
         return;
     }
     
+    if (_finished || _canceled) return;
+    
     [_request clearDelegatesAndCancel];
     [_parser abortParsing];
     
