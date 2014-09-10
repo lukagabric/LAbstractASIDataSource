@@ -13,7 +13,7 @@ typedef void(^DataCompletionBlock)(ASIHTTPRequest *asiHttpRequest, NSError *erro
 typedef void(^ObjectsCompletionBlock)(ASIHTTPRequest *asiHttpRequest, NSArray *parsedItems, NSError *error);
 
 
-@interface LAbstractASIDataSource : NSObject
+@interface LASIDataSource : NSObject
 
 
 @property (readonly, atomic) BOOL finished;
@@ -27,43 +27,12 @@ typedef void(^ObjectsCompletionBlock)(ASIHTTPRequest *asiHttpRequest, NSArray *p
 @property (readonly, nonatomic) NSArray *parsedItems;
 
 
-#pragma mark - Get data/objects
+- (instancetype)initWithRequest:(ASIHTTPRequest *)request;
 
-
-- (void)getDataWithRequest:(ASIHTTPRequest *)request andCompletionBlock:(DataCompletionBlock)completionBlock;
-- (void)getObjectsWithRequest:(ASIHTTPRequest *)request andCompletionBlock:(ObjectsCompletionBlock)completionBlock;
+- (void)getDataWithCompletionBlock:(DataCompletionBlock)completionBlock;
+- (void)getObjectsCompletionBlock:(ObjectsCompletionBlock)completionBlock;
 - (void)cancelLoad;
 
-
-#pragma mark -
-
-
-@end
-
-
-#pragma mark - Protected
-
-
-@interface LAbstractASIDataSource ()
-
-
-@property (strong, nonatomic) ASIHTTPRequest *request;
-@property (strong, nonatomic) id <LParserInterface> parser;
-@property (strong, nonatomic) NSArray *parsedItems;
-@property (copy, nonatomic) DataCompletionBlock dataCompletionBlock;
-@property (copy, nonatomic) ObjectsCompletionBlock objectsCompletionBlock;
-
-
-- (void)initialize;
-
-- (void)parseData;
-- (BOOL)isResponseValid;
-
-- (void)showProgressForActivityView;
-- (void)hideProgressForActivityView;
-
-
-+ (NSString *)queryStringFromParams:(NSDictionary *)dict;
 
 + (ASIHTTPRequest *)requestWithUrl:(NSString *)url
                        cachePolicy:(ASICachePolicy)cachePolicy
@@ -92,6 +61,34 @@ typedef void(^ObjectsCompletionBlock)(ASIHTTPRequest *asiHttpRequest, NSArray *p
                         parameters:(NSDictionary *)params
                      requestMethod:(NSString *)requestMethod
                           userInfo:(NSDictionary *)userInfo;
+
++ (NSString *)queryStringFromParams:(NSDictionary *)dict;
+
+
+#pragma mark -
+
+
+@end
+
+
+#pragma mark - Protected
+
+
+@interface LASIDataSource ()
+
+
+@property (strong, nonatomic) ASIHTTPRequest *request;
+@property (strong, nonatomic) id <LParserInterface> parser;
+@property (strong, nonatomic) NSArray *parsedItems;
+@property (copy, nonatomic) DataCompletionBlock dataCompletionBlock;
+@property (copy, nonatomic) ObjectsCompletionBlock objectsCompletionBlock;
+
+
+- (void)initialize;
+- (void)parseData;
+- (BOOL)isResponseValid;
+- (void)showProgressForActivityView;
+- (void)hideProgressForActivityView;
 
 
 @end

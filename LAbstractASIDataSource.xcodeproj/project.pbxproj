@@ -32,10 +32,10 @@
 		A1B63CB616A9500B0085F8AD /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = A1B63CB516A9500B0085F8AD /* UIKit.framework */; };
 		A1B63CB716A9500B0085F8AD /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = A1B63CA116A94FF00085F8AD /* Foundation.framework */; };
 		A1B63CB916A9500B0085F8AD /* CoreGraphics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = A1B63CB816A9500B0085F8AD /* CoreGraphics.framework */; };
-		A1B63CDA16A950DE0085F8AD /* LAbstractASIDataSource.m in Sources */ = {isa = PBXBuildFile; fileRef = A1B63CD716A950DE0085F8AD /* LAbstractASIDataSource.m */; };
+		A1B63CDA16A950DE0085F8AD /* LASIDataSource.m in Sources */ = {isa = PBXBuildFile; fileRef = A1B63CD716A950DE0085F8AD /* LASIDataSource.m */; };
 		A1B63CE716A950E70085F8AD /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = A1B63CE316A950E70085F8AD /* main.m */; };
 		A1B63CE816A950FC0085F8AD /* libLAbstractASIDataSource.a in Frameworks */ = {isa = PBXBuildFile; fileRef = A1B63C9E16A94FF00085F8AD /* libLAbstractASIDataSource.a */; };
-		A1D307F716A9EB8100088B5D /* NewsDataSource.m in Sources */ = {isa = PBXBuildFile; fileRef = A1D307F616A9EB8100088B5D /* NewsDataSource.m */; };
+		A1D307F716A9EB8100088B5D /* DataSourceFactory.m in Sources */ = {isa = PBXBuildFile; fileRef = A1D307F616A9EB8100088B5D /* DataSourceFactory.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -109,14 +109,14 @@
 		A1B63CB316A9500B0085F8AD /* LAbstractASIDataSourceSample.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = LAbstractASIDataSourceSample.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		A1B63CB516A9500B0085F8AD /* UIKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = UIKit.framework; path = System/Library/Frameworks/UIKit.framework; sourceTree = SDKROOT; };
 		A1B63CB816A9500B0085F8AD /* CoreGraphics.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreGraphics.framework; path = System/Library/Frameworks/CoreGraphics.framework; sourceTree = SDKROOT; };
-		A1B63CD616A950DE0085F8AD /* LAbstractASIDataSource.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LAbstractASIDataSource.h; sourceTree = "<group>"; };
-		A1B63CD716A950DE0085F8AD /* LAbstractASIDataSource.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LAbstractASIDataSource.m; sourceTree = "<group>"; };
+		A1B63CD616A950DE0085F8AD /* LASIDataSource.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LASIDataSource.h; sourceTree = "<group>"; };
+		A1B63CD716A950DE0085F8AD /* LASIDataSource.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LASIDataSource.m; sourceTree = "<group>"; };
 		A1B63CD916A950DE0085F8AD /* LAbstractASIDataSource-Prefix.pch */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "LAbstractASIDataSource-Prefix.pch"; sourceTree = "<group>"; };
 		A1B63CE116A950E70085F8AD /* LAbstractASIDataSourceSample-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "LAbstractASIDataSourceSample-Info.plist"; sourceTree = "<group>"; };
 		A1B63CE216A950E70085F8AD /* LAbstractASIDataSourceSample-Prefix.pch */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "LAbstractASIDataSourceSample-Prefix.pch"; sourceTree = "<group>"; };
 		A1B63CE316A950E70085F8AD /* main.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
-		A1D307F516A9EB8000088B5D /* NewsDataSource.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NewsDataSource.h; sourceTree = "<group>"; };
-		A1D307F616A9EB8100088B5D /* NewsDataSource.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = NewsDataSource.m; sourceTree = "<group>"; };
+		A1D307F516A9EB8000088B5D /* DataSourceFactory.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DataSourceFactory.h; sourceTree = "<group>"; };
+		A1D307F616A9EB8100088B5D /* DataSourceFactory.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DataSourceFactory.m; sourceTree = "<group>"; };
 		A1EF2E2C16A9DEE500C82775 /* README.md */ = {isa = PBXFileReference; lastKnownFileType = text; path = README.md; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -204,8 +204,8 @@
 				A1544A6816A9EA8A0027F57A /* NewsParser.m */,
 				41511E0D18EBDEC100B23CA1 /* NewsJSONParser.h */,
 				41511E0E18EBDEC100B23CA1 /* NewsJSONParser.m */,
-				A1D307F516A9EB8000088B5D /* NewsDataSource.h */,
-				A1D307F616A9EB8100088B5D /* NewsDataSource.m */,
+				A1D307F516A9EB8000088B5D /* DataSourceFactory.h */,
+				A1D307F616A9EB8100088B5D /* DataSourceFactory.m */,
 			);
 			path = Model;
 			sourceTree = "<group>";
@@ -274,8 +274,8 @@
 		A1B63CD516A950DE0085F8AD /* Classes */ = {
 			isa = PBXGroup;
 			children = (
-				A1B63CD616A950DE0085F8AD /* LAbstractASIDataSource.h */,
-				A1B63CD716A950DE0085F8AD /* LAbstractASIDataSource.m */,
+				A1B63CD616A950DE0085F8AD /* LASIDataSource.h */,
+				A1B63CD716A950DE0085F8AD /* LASIDataSource.m */,
 				A1544A5616A9E67A0027F57A /* LParserInterface.h */,
 				410FAD981880392F00B1F6E0 /* LAbstractParser.h */,
 				410FAD991880392F00B1F6E0 /* LAbstractParser.m */,
@@ -395,7 +395,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				A1B63CDA16A950DE0085F8AD /* LAbstractASIDataSource.m in Sources */,
+				A1B63CDA16A950DE0085F8AD /* LASIDataSource.m in Sources */,
 				410FAD9A1880392F00B1F6E0 /* LAbstractParser.m in Sources */,
 				419D8C6C1827DB440060F964 /* MBProgressHUD.m in Sources */,
 				41F01AE318EAEBA600B9A48C /* LAbstractJSONParser.m in Sources */,
@@ -420,7 +420,7 @@
 				A1544A6416A9EA5F0027F57A /* ViewController.m in Sources */,
 				A1544A6516A9EA5F0027F57A /* NewsItem.m in Sources */,
 				A1544A6916A9EA8A0027F57A /* NewsParser.m in Sources */,
-				A1D307F716A9EB8100088B5D /* NewsDataSource.m in Sources */,
+				A1D307F716A9EB8100088B5D /* DataSourceFactory.m in Sources */,
 				41511E0F18EBDEC100B23CA1 /* NewsJSONParser.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

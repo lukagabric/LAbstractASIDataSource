@@ -4,7 +4,7 @@
 //
 
 
-#import "NewsDataSource.h"
+#import "DataSourceFactory.h"
 #import "NewsParser.h"
 #import "NewsJSONParser.h"
 
@@ -12,13 +12,13 @@
 #define JSON 0
 
 
-@implementation NewsDataSource
+@implementation DataSourceFactory
 
 
-- (ASIHTTPRequest *)newsRequest
++ (ASIHTTPRequest *)newsRequest
 {
 #if JSON
-    return [NewsDataSource requestWithUrl:@"http://scripting.com/rss.json"
+    return [LASIDataSource requestWithUrl:@"http://scripting.com/rss.json"
                               cachePolicy:ASIAskServerIfModifiedCachePolicy
                           timeoutInterval:15
                            secondsToCache:20
@@ -27,7 +27,7 @@
                             requestMethod:@"GET"
                               parserClass:[NewsJSONParser class]];
 #else
-    return [NewsDataSource requestWithUrl:@"http://feeds.bbci.co.uk/news/rss.xml"
+    return [LASIDataSource requestWithUrl:@"http://feeds.bbci.co.uk/news/rss.xml"
                               cachePolicy:ASIAskServerIfModifiedCachePolicy
                           timeoutInterval:15
                            secondsToCache:20
@@ -39,9 +39,11 @@
 }
 
 
-- (void)getNewsItemsWithCompletionBlock:(void(^)(ASIHTTPRequest *asiHttpRequest, NSArray *parsedItems, NSError *error))completionBlock
++ (LASIDataSource *)newsDataSourceWithActivityView:(UIView *)activityView
 {
-    [self getObjectsWithRequest:[self newsRequest] andCompletionBlock:completionBlock];
+    LASIDataSource *newsDataSource = [[LASIDataSource alloc] initWithRequest:[self newsRequest]];
+    newsDataSource.activityView = activityView;
+    return newsDataSource;
 }
 
 

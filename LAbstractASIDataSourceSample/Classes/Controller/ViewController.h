@@ -5,14 +5,14 @@
 
 
 #import <UIKit/UIKit.h>
-#import "NewsDataSource.h"
+#import "LASIDataSource.h"
 
 
 @interface ViewController : UIViewController <UITableViewDataSource, UITableViewDelegate>
 {
     __weak UITableView *_tableView;
 
-    NewsDataSource *_newsDataSource;
+    LASIDataSource *_newsDataSource;
     NSArray *_newsItems;    
 }
 

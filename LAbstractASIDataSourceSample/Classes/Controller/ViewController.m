@@ -6,6 +6,7 @@
 
 #import "ViewController.h"
 #import "NewsItem.h"
+#import "DataSourceFactory.h"
 
 
 @implementation ViewController
@@ -58,18 +59,13 @@
     if (_newsDataSource)
         [_newsDataSource cancelLoad];
 
-    _newsDataSource = [NewsDataSource new];
-    _newsDataSource.activityView = self.view;
+    _newsDataSource = [DataSourceFactory newsDataSourceWithActivityView:self.view];
 
-    [_newsDataSource getNewsItemsWithCompletionBlock:^(ASIHTTPRequest *asiHttpRequest, NSArray *parsedItems, NSError *error) {
+    [_newsDataSource getObjectsCompletionBlock:^(ASIHTTPRequest *asiHttpRequest, NSArray *parsedItems, NSError *error) {
         if (error)
-        {
             [weakSelf didFailToGetNewsItemsWithError:error];
-        }
         else
-        {
             [weakSelf didGetNewItems:parsedItems];
-        }
         
         weakSelf.navigationItem.rightBarButtonItem.enabled = YES;
     }];

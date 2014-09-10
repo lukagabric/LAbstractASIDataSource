@@ -4,21 +4,22 @@
 //
 
 
-#import "LAbstractASIDataSource.h"
+#import "LASIDataSource.h"
 #import "MBProgressHUD.h"
 
 
-@implementation LAbstractASIDataSource
+@implementation LASIDataSource
 
 
 #pragma mark - Init
 
 
-- (id)init
+- (instancetype)initWithRequest:(ASIHTTPRequest *)request
 {
 	self = [super init];
 	if (self)
 	{
+        _request = request;
         [self initialize];
 	}
 	return self;
@@ -40,14 +41,13 @@
 #pragma mark - Get data
 
 
-- (void)getDataWithRequest:(ASIHTTPRequest *)request andCompletionBlock:(DataCompletionBlock)completionBlock
+- (void)getDataWithCompletionBlock:(DataCompletionBlock)completionBlock
 {
     NSAssert([[NSThread currentThread] isMainThread], @"This method must be called on the main thread.");
     
     if (_running || _finished) return;
     
     self.dataCompletionBlock = completionBlock;
-    _request = request;
     
     [self loadDidStart];
     
@@ -94,14 +94,13 @@
 #pragma mark - Get and parse data
 
 
-- (void)getObjectsWithRequest:(ASIHTTPRequest *)request andCompletionBlock:(ObjectsCompletionBlock)completionBlock
+- (void)getObjectsCompletionBlock:(ObjectsCompletionBlock)completionBlock
 {
     NSAssert([[NSThread currentThread] isMainThread], @"This method must be called on the main thread.");
     
     if (_running || _finished) return;
     
     self.objectsCompletionBlock = completionBlock;
-    _request = request;
 
     [self loadDidStart];
     
