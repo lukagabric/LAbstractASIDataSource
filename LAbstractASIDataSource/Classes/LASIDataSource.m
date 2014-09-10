@@ -41,7 +41,7 @@
 #pragma mark - Get data
 
 
-- (void)getDataWithCompletionBlock:(DataCompletionBlock)completionBlock
+- (void)fetchDataWithCompletionBlock:(DataCompletionBlock)completionBlock
 {
     NSAssert([[NSThread currentThread] isMainThread], @"This method must be called on the main thread.");
     
@@ -94,7 +94,7 @@
 #pragma mark - Get and parse data
 
 
-- (void)getObjectsCompletionBlock:(ObjectsCompletionBlock)completionBlock
+- (void)fetchObjectsWithCompletionBlock:(ObjectsCompletionBlock)completionBlock
 {
     NSAssert([[NSThread currentThread] isMainThread], @"This method must be called on the main thread.");
     

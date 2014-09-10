@@ -61,7 +61,7 @@
 
     _newsDataSource = [DataSourceFactory newsDataSourceWithActivityView:self.view];
 
-    [_newsDataSource getObjectsCompletionBlock:^(ASIHTTPRequest *asiHttpRequest, NSArray *parsedItems, NSError *error) {
+    [_newsDataSource fetchObjectsWithCompletionBlock:^(ASIHTTPRequest *asiHttpRequest, NSArray *parsedItems, NSError *error) {
         if (error)
             [weakSelf didFailToGetNewsItemsWithError:error];
         else

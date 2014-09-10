@@ -29,8 +29,8 @@ typedef void(^ObjectsCompletionBlock)(ASIHTTPRequest *asiHttpRequest, NSArray *p
 
 - (instancetype)initWithRequest:(ASIHTTPRequest *)request;
 
-- (void)getDataWithCompletionBlock:(DataCompletionBlock)completionBlock;
-- (void)getObjectsCompletionBlock:(ObjectsCompletionBlock)completionBlock;
+- (void)fetchDataWithCompletionBlock:(DataCompletionBlock)completionBlock;
+- (void)fetchObjectsWithCompletionBlock:(ObjectsCompletionBlock)completionBlock;
 - (void)cancelLoad;
 
 
