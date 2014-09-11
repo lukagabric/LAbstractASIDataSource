@@ -53,7 +53,7 @@
     
 	if (!_request || !_request.url)
 	{
-        if (!_canceled)
+        if (!_cancelled)
         {
             [self hideProgressForActivityView];
             [self loadDidFinishWithError:[NSError errorWithDomain:@"Incorrect request parameters, is url nil?" code:400 userInfo:nil] cancelled:NO];
@@ -73,7 +73,7 @@
                 if (weakSelf.activityView)
                     [weakSelf showProgressForActivityView];
             
-                if (!weakSelf.canceled)
+                if (!weakSelf.cancelled)
                     [weakSelf loadDidFinishWithError:asiHttpRequest.error cancelled:NO];
             }
 		};
@@ -106,7 +106,7 @@
     
 	if (!_request || !_request.url)
 	{
-        if (!_canceled)
+        if (!_cancelled)
         {
             [self hideProgressForActivityView];
             [self loadDidFinishWithError:[NSError errorWithDomain:@"Incorrect request parameters, is url nil?" code:400 userInfo:nil] cancelled:NO];
@@ -121,12 +121,12 @@
 		__weak ASIHTTPRequest *weakReq = _request;
         
 		[_request setCompletionBlock:^{
-            if ([weakSelf isResponseValid] && weakSelf.objectsCompletionBlock && !weakSelf.canceled)
+            if ([weakSelf isResponseValid] && weakSelf.objectsCompletionBlock && !weakSelf.cancelled)
                 [weakSelf parseData];
         }];
         
 		[_request setFailedBlock:^{
-            if (!weakSelf.canceled)
+            if (!weakSelf.cancelled)
             {
                 [weakSelf hideProgressForActivityView];
                 [weakSelf loadDidFinishWithError:weakReq.error cancelled:NO];
@@ -153,7 +153,7 @@
         
         NSError *parserError;
         
-        if (!weakSelf.canceled)
+        if (!weakSelf.cancelled)
         {
             id <LParserInterface> parser = [[parserClass class] new];
             weakSelf.parser = parser;
@@ -170,7 +170,7 @@
         dispatch_async(dispatch_get_main_queue(), ^{
             [weakSelf hideProgressForActivityView];
             
-            if (!weakSelf.canceled)
+            if (!weakSelf.cancelled)
             {
                 [weakSelf loadDidFinishWithError:parserError cancelled:NO];
             }
@@ -199,7 +199,7 @@
 {
     _finished = YES;
     _running = NO;
-    _canceled = cancelled;
+    _cancelled = cancelled;
     _error = error;
     
     if (self.dataCompletionBlock)
@@ -213,7 +213,7 @@
 {
     _finished = NO;
     _running = YES;
-    _canceled = NO;
+    _cancelled = NO;
     _error = nil;
 }
 
@@ -229,7 +229,7 @@
         return;
     }
     
-    if (_finished || _canceled) return;
+    if (_finished || _cancelled) return;
     
     [_request clearDelegatesAndCancel];
     [_parser abortParsing];

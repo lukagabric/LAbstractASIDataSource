@@ -18,7 +18,7 @@ typedef void(^ObjectsCompletionBlock)(ASIHTTPRequest *asiHttpRequest, NSArray *p
 
 @property (readonly, atomic) BOOL finished;
 @property (readonly, atomic) BOOL running;
-@property (readonly, atomic) BOOL canceled;
+@property (readonly, atomic) BOOL cancelled;
 @property (readonly, atomic) NSError *error;
 
 @property (weak, nonatomic) UIView *activityView;
