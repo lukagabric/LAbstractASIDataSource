@@ -10,6 +10,8 @@
 @interface DataSourceFactory : NSObject
 
 
++ (LASIDataSource *)newsJSONDataSource;
++ (LASIDataSource *)newsXMLDataSource;
 + (LASIDataSource *)newsDataSourceWithActivityView:(UIView *)activityView;
 
 

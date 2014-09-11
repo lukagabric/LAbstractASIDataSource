@@ -10,7 +10,9 @@
 
 
 @implementation ViewController
-
+{
+    LASIDataSource *__n1, *__n2;
+}
 
 #pragma mark - View
 
@@ -18,7 +20,18 @@
 - (void)viewDidLoad
 {
     [super viewDidLoad];
-
+    
+    __n1 = [DataSourceFactory newsJSONDataSource];
+    __n2 = [DataSourceFactory newsXMLDataSource];
+    
+    [__n1 fetchObjectsWithCompletionBlock:^(ASIHTTPRequest *asiHttpRequest, NSArray *parsedItems, NSError *error) {
+        NSLog(@"__n1");
+    
+        [__n2 fetchObjectsWithCompletionBlock:^(ASIHTTPRequest *asiHttpRequest, NSArray *parsedItems, NSError *error) {
+            NSLog(@"__n2");
+        }];
+    }];
+    
     [self setupView];
     [self loadTableView];
 

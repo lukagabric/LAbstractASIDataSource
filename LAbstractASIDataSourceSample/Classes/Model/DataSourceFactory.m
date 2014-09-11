@@ -9,15 +9,14 @@
 #import "NewsJSONParser.h"
 
 
-#define JSON 0
+#define JSON 1
 
 
 @implementation DataSourceFactory
 
 
-+ (ASIHTTPRequest *)newsRequest
++ (ASIHTTPRequest *)newsJSONRequest
 {
-#if JSON
     return [LASIDataSource requestWithUrl:@"http://scripting.com/rss.json"
                               cachePolicy:ASIAskServerIfModifiedCachePolicy
                           timeoutInterval:15
@@ -26,7 +25,11 @@
                                parameters:nil
                             requestMethod:@"GET"
                               parserClass:[NewsJSONParser class]];
-#else
+}
+
+
++ (ASIHTTPRequest *)newsXMLRequest
+{
     return [LASIDataSource requestWithUrl:@"http://feeds.bbci.co.uk/news/rss.xml"
                               cachePolicy:ASIAskServerIfModifiedCachePolicy
                           timeoutInterval:15
@@ -35,14 +38,31 @@
                                parameters:nil
                             requestMethod:@"GET"
                               parserClass:[NewsParser class]];
-#endif
+}
+
+
++ (LASIDataSource *)newsJSONDataSource
+{
+    return [[LASIDataSource alloc] initWithRequest:[self newsJSONRequest]];
+}
+
+
++ (LASIDataSource *)newsXMLDataSource
+{
+    return [[LASIDataSource alloc] initWithRequest:[self newsXMLRequest]];
 }
 
 
 + (LASIDataSource *)newsDataSourceWithActivityView:(UIView *)activityView
 {
-    LASIDataSource *newsDataSource = [[LASIDataSource alloc] initWithRequest:[self newsRequest]];
+    LASIDataSource *newsDataSource;
+#if JSON
+    newsDataSource = [self newsJSONDataSource];
+#else
+    newsDataSource = [self newsXMLDataSource];
+#endif
     newsDataSource.activityView = activityView;
+
     return newsDataSource;
 }
 
