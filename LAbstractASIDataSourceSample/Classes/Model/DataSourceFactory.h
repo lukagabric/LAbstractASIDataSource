@@ -4,15 +4,15 @@
 //
 
 
-#import "LASIDataSource.h"
+#import "LDataSource.h"
 
 
 @interface DataSourceFactory : NSObject
 
 
-+ (LASIDataSource *)newsJSONDataSource;
-+ (LASIDataSource *)newsXMLDataSource;
-+ (LASIDataSource *)newsDataSourceWithActivityView:(UIView *)activityView;
++ (LDataSource *)newsJSONDataSource;
++ (LDataSource *)newsXMLDataSource;
++ (LDataSource *)newsDataSourceWithActivityView:(UIView *)activityView;
 
 
 @end

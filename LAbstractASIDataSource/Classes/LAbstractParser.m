@@ -24,14 +24,14 @@
 - (void)initialize
 {
     _dateTimeFormatter = [NSDateFormatter new];
-    _dateTimeFormatter.dateFormat = [self getDateTimeFormat];
+    _dateTimeFormatter.dateFormat = [self dateTimeFormat];
     
     _dateFormatter = [NSDateFormatter new];
-    _dateFormatter.dateFormat = [self getDateFormat];
+    _dateFormatter.dateFormat = [self dateFormat];
 }
 
 
-#pragma mark - Parse data
+#pragma mark - LParserInterface
 
 
 - (void)parseData:(id)data
@@ -54,6 +54,62 @@
 	{
 		_error = [NSError errorWithDomain:@"No data" code:0 userInfo:nil];
 	}
+}
+
+
+- (void)setResponse:(NSURLResponse *)response
+{
+    _response = response;
+}
+
+
+- (NSError *)error
+{
+    return _error;
+}
+
+
+- (NSArray *)itemsArray
+{
+    return [NSArray arrayWithArray:_items];
+}
+
+
+- (void)abortParsing
+{
+    [_parser setDelegate:nil];
+    [_parser abortParsing];
+    _parser = nil;
+    _error = [NSError errorWithDomain:@"Parsing aborted." code:299 userInfo:nil];
+}
+
+
+#pragma mark - Did start/end element
+
+
+- (void)didStartElement
+{
+    
+}
+
+- (void)didEndElement
+{
+    
+}
+
+
+#pragma mark - Date/Time Format
+
+
+- (NSString *)dateFormat
+{
+    return @"yyyy-MM-dd";
+}
+
+
+- (NSString *)dateTimeFormat
+{
+    return @"yyyy-MM-dd hh:mm:ss Z";
 }
 
 
@@ -107,74 +163,6 @@
 - (void)parser:(NSXMLParser *)parser foundCDATA:(NSData *)CDATABlock
 {
 	_mElementValue = [[NSMutableString alloc] initWithData:CDATABlock encoding:NSUTF8StringEncoding];
-}
-
-
-#pragma mark - Methods to override in subclass
-
-
-- (void)didStartElement
-{
-    
-}
-
-- (void)didEndElement
-{
-    
-}
-
-
-#pragma mark - Setters
-
-
-- (void)setUserInfo:(id)userInfo
-{
-    _userInfo = userInfo;
-}
-
-
-- (void)setASIHTTPRequest:(ASIHTTPRequest *)request
-{
-    _request = request;
-}
-
-
-#pragma mark - Getters
-
-
-- (NSString *)getDateFormat
-{
-    return @"yyyy-MM-dd";
-}
-
-
-- (NSString *)getDateTimeFormat
-{
-    return @"yyyy-MM-dd hh:mm:ss Z";
-}
-
-
-- (NSArray *)getItemsArray
-{
-	return [NSArray arrayWithArray:_items];
-}
-
-
-- (NSError *)getError
-{
-    return _error;
-}
-
-
-#pragma mark - abort
-
-
-- (void)abortParsing
-{
-    [_parser setDelegate:nil];
-	[_parser abortParsing];
-    _parser = nil;
-	_error = [NSError errorWithDomain:@"Parsing aborted." code:299 userInfo:nil];
 }
 
 

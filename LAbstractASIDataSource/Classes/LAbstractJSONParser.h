@@ -34,8 +34,7 @@
     
     NSDictionary *_currentElement;
     
-    id _userInfo;
-    ASIHTTPRequest *_request;
+    NSURLResponse *_response;
 }
 
 
@@ -55,9 +54,9 @@
 
 - (void)bindObject;
 
-- (NSString *)getDateTimeFormat;
-- (NSString *)getDateFormat;
-- (NSString *)getRootKeyPath;
+- (NSString *)dateTimeFormat;
+- (NSString *)dateFormat;
+- (NSString *)rootKeyPath;
 
 
 @end

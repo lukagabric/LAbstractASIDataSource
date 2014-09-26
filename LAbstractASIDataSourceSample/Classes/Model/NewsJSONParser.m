@@ -14,13 +14,13 @@
 - (void)bindObject
 {
     NewsItem *item = [NewsItem new];
-    bindStrJ(item.title, @"title");
-    bindStrJ(item.description, @"description");
+    bindStrJ(item.newsTitle, @"title");
+    bindStrJ(item.newsDescription, @"description");
     [_items addObject:item];
 }
 
 
-- (NSString *)getRootKeyPath
+- (NSString *)rootKeyPath
 {
     return @"rss.channel.item";
 }

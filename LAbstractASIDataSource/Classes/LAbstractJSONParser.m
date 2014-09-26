@@ -17,7 +17,7 @@
 {
     LAbstractJSONParser *parser = [[self class] new];
     [parser parseData:data];
-    return [parser getItemsArray];
+    return [parser itemsArray];
 }
 
 
@@ -38,14 +38,14 @@
 - (void)initialize
 {
     _dateTimeFormatter = [NSDateFormatter new];
-    _dateTimeFormatter.dateFormat = [self getDateTimeFormat];
+    _dateTimeFormatter.dateFormat = [self dateTimeFormat];
     
     _dateFormatter = [NSDateFormatter new];
-    _dateFormatter.dateFormat = [self getDateFormat];
+    _dateFormatter.dateFormat = [self dateFormat];
 }
 
 
-#pragma mark - Parser data
+#pragma mark - LParserInterface
 
 
 - (void)parseData:(id)data
@@ -73,7 +73,7 @@
         {
             _rootJsonObject = jsonObject;
             
-            NSString *rootKeyPath = [self getRootKeyPath];
+            NSString *rootKeyPath = [self rootKeyPath];
             
             if (rootKeyPath)
                 _rootJsonObject = [jsonObject valueForKeyPath:rootKeyPath];
@@ -106,6 +106,30 @@
 }
 
 
+- (void)setResponse:(NSURLResponse *)response
+{
+    _response = response;
+}
+
+
+- (NSError *)error
+{
+    return _error;
+}
+
+
+- (NSArray *)itemsArray
+{
+    return [NSArray arrayWithArray:_items];
+}
+
+
+- (void)abortParsing
+{
+    _error = [NSError errorWithDomain:@"Parsing aborted." code:299 userInfo:nil];
+}
+
+
 #pragma mark - Bind object
 
 
@@ -115,60 +139,27 @@
 }
 
 
-#pragma mark - Setters
+#pragma mark - rootKeyPath
 
 
-- (void)setUserInfo:(id)userInfo
-{
-    _userInfo = userInfo;
-}
-
-
-- (void)setASIHTTPRequest:(ASIHTTPRequest *)request
-{
-    _request = request;
-}
-
-
-#pragma mark - Getters
-
-
-- (NSString *)getDateFormat
-{
-    return @"yyyy-MM-dd";
-}
-
-
-- (NSString *)getDateTimeFormat
-{
-    return @"yyyy-MM-dd hh:mm:ss Z";
-}
-
-
-- (NSArray *)getItemsArray
-{
-	return [NSArray arrayWithArray:_items];
-}
-
-
-- (NSError *)getError
-{
-    return _error;
-}
-
-
-- (NSString *)getRootKeyPath
+- (NSString *)rootKeyPath
 {
     return nil;
 }
 
 
-#pragma mark - abort
+#pragma mark - Date/Time Format
 
 
-- (void)abortParsing
+- (NSString *)dateFormat
 {
-	_error = [NSError errorWithDomain:@"Parsing aborted." code:299 userInfo:nil];
+    return @"yyyy-MM-dd";
+}
+
+
+- (NSString *)dateTimeFormat
+{
+    return @"yyyy-MM-dd hh:mm:ss Z";
 }
 
 

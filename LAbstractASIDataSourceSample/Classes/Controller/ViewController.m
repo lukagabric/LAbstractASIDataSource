@@ -11,7 +11,7 @@
 
 @implementation ViewController
 {
-    LASIDataSource *__n1, *__n2;
+    LDataSource *__n1, *__n2;
 }
 
 #pragma mark - View
@@ -24,10 +24,10 @@
     __n1 = [DataSourceFactory newsJSONDataSource];
     __n2 = [DataSourceFactory newsXMLDataSource];
     
-    [__n1 fetchObjectsWithCompletionBlock:^(ASIHTTPRequest *asiHttpRequest, NSArray *parsedItems, NSError *error) {
+    [__n1 fetchObjectsWithCompletionBlock:^(NSURLResponse *response, NSArray *parsedItems, NSError *error) {
         NSLog(@"__n1");
     
-        [__n2 fetchObjectsWithCompletionBlock:^(ASIHTTPRequest *asiHttpRequest, NSArray *parsedItems, NSError *error) {
+        [__n2 fetchObjectsWithCompletionBlock:^(NSURLResponse *response, NSArray *parsedItems, NSError *error) {
             NSLog(@"__n2");
         }];
     }];
@@ -74,7 +74,7 @@
 
     _newsDataSource = [DataSourceFactory newsDataSourceWithActivityView:self.view];
 
-    [_newsDataSource fetchObjectsWithCompletionBlock:^(ASIHTTPRequest *asiHttpRequest, NSArray *parsedItems, NSError *error) {
+    [_newsDataSource fetchObjectsWithCompletionBlock:^(NSURLResponse *response, NSArray *parsedItems, NSError *error) {
         if (error)
             [weakSelf didFailToGetNewsItemsWithError:error];
         else
@@ -124,8 +124,8 @@
     
     NewsItem *newsItem = [_newsItems objectAtIndex:indexPath.row];
     
-    cell.textLabel.text = newsItem.title;
-    cell.detailTextLabel.text = newsItem.description;
+    cell.textLabel.text = newsItem.newsTitle;
+    cell.detailTextLabel.text = newsItem.newsDescription;
     
     return cell;
 }

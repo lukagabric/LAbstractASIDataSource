@@ -5,7 +5,6 @@
 
 
 #import "LParserInterface.h"
-#import "ASIHTTPRequest.h"
 
 
 #define ifElement(str)    if ([_elementName isEqualToString:str])
@@ -32,8 +31,7 @@
     NSDateFormatter *_dateTimeFormatter;
     NSDateFormatter *_dateFormatter;
     
-    id _userInfo;
-    ASIHTTPRequest *_request;
+    NSURLResponse *_response;
 }
 
 
@@ -51,8 +49,8 @@
 - (void)didStartElement;
 - (void)didEndElement;
 
-- (NSString *)getDateTimeFormat;
-- (NSString *)getDateFormat;
+- (NSString *)dateTimeFormat;
+- (NSString *)dateFormat;
 
 
 @end

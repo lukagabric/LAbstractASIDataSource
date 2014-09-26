@@ -10,26 +10,26 @@
 	<string>LAbstractASIDataSource</string>
 	<key>IDESourceControlProjectOriginsDictionary</key>
 	<dict>
-		<key>75364DFA-11C3-46F5-A0F3-4D934CD38447</key>
-		<string>https://github.com/lukagabric/LAbstractASIDataSource.git</string>
 		<key>D0181011-7656-49ED-839A-93D869D380A0</key>
 		<string>https://github.com/pokeb/asi-http-request.git</string>
+		<key>FFA5A4FAA0E18710BBE3FC808F6895F5697F91CD</key>
+		<string>https://github.com/lukagabric/LAbstractASIDataSource.git</string>
 	</dict>
 	<key>IDESourceControlProjectPath</key>
 	<string>LAbstractASIDataSource.xcodeproj/project.xcworkspace</string>
 	<key>IDESourceControlProjectRelativeInstallPathDictionary</key>
 	<dict>
-		<key>75364DFA-11C3-46F5-A0F3-4D934CD38447</key>
-		<string>../..</string>
 		<key>D0181011-7656-49ED-839A-93D869D380A0</key>
 		<string>../../External/ASIHTTPRequest</string>
+		<key>FFA5A4FAA0E18710BBE3FC808F6895F5697F91CD</key>
+		<string>../..</string>
 	</dict>
 	<key>IDESourceControlProjectURL</key>
 	<string>https://github.com/lukagabric/LAbstractASIDataSource.git</string>
 	<key>IDESourceControlProjectVersion</key>
-	<integer>110</integer>
+	<integer>111</integer>
 	<key>IDESourceControlProjectWCCIdentifier</key>
-	<string>75364DFA-11C3-46F5-A0F3-4D934CD38447</string>
+	<string>FFA5A4FAA0E18710BBE3FC808F6895F5697F91CD</string>
 	<key>IDESourceControlProjectWCConfigurations</key>
 	<array>
 		<dict>
@@ -44,7 +44,7 @@
 			<key>IDESourceControlRepositoryExtensionIdentifierKey</key>
 			<string>public.vcs.git</string>
 			<key>IDESourceControlWCCIdentifierKey</key>
-			<string>75364DFA-11C3-46F5-A0F3-4D934CD38447</string>
+			<string>FFA5A4FAA0E18710BBE3FC808F6895F5697F91CD</string>
 			<key>IDESourceControlWCCName</key>
 			<string>LAbstractASIDataSource</string>
 		</dict>

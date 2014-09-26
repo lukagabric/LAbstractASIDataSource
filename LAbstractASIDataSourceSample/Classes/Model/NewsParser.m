@@ -26,8 +26,8 @@
 
 - (void)didEndElement
 {
-    ifElement(@"title") bindStr(_item.title);
-    elifElement(@"description") bindStr(_item.description);
+    ifElement(@"title") bindStr(_item.newsTitle);
+    elifElement(@"description") bindStr(_item.newsDescription);
 }
 
 

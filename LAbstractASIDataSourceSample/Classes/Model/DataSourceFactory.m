@@ -15,47 +15,31 @@
 @implementation DataSourceFactory
 
 
-+ (ASIHTTPRequest *)newsJSONRequest
++ (NSURLSession *)session
 {
-    return [LASIDataSource requestWithUrl:@"http://scripting.com/rss.json"
-                              cachePolicy:ASIAskServerIfModifiedCachePolicy
-                          timeoutInterval:15
-                           secondsToCache:20
-                                  headers:nil
-                               parameters:nil
-                            requestMethod:@"GET"
-                              parserClass:[NewsJSONParser class]];
+    return [NSURLSession sessionWithConfiguration:[NSURLSessionConfiguration ephemeralSessionConfiguration]];
 }
 
 
-+ (ASIHTTPRequest *)newsXMLRequest
++ (LDataSource *)newsJSONDataSource
 {
-    return [LASIDataSource requestWithUrl:@"http://feeds.bbci.co.uk/news/rss.xml"
-                              cachePolicy:ASIAskServerIfModifiedCachePolicy
-                          timeoutInterval:15
-                           secondsToCache:20
-                                  headers:nil
-                               parameters:nil
-                            requestMethod:@"GET"
-                              parserClass:[NewsParser class]];
+    return [[LDataSource alloc] initWithSession:[self session]
+                                            url:@"http://scripting.com/rss.json"
+                                      andParser:[NewsJSONParser new]];
 }
 
 
-+ (LASIDataSource *)newsJSONDataSource
++ (LDataSource *)newsXMLDataSource
 {
-    return [[LASIDataSource alloc] initWithRequest:[self newsJSONRequest]];
+    return [[LDataSource alloc] initWithSession:[self session]
+                                            url:@"http://feeds.bbci.co.uk/news/rss.xml"
+                                      andParser:[NewsParser new]];
 }
 
 
-+ (LASIDataSource *)newsXMLDataSource
++ (LDataSource *)newsDataSourceWithActivityView:(UIView *)activityView
 {
-    return [[LASIDataSource alloc] initWithRequest:[self newsXMLRequest]];
-}
-
-
-+ (LASIDataSource *)newsDataSourceWithActivityView:(UIView *)activityView
-{
-    LASIDataSource *newsDataSource;
+    LDataSource *newsDataSource;
 #if JSON
     newsDataSource = [self newsJSONDataSource];
 #else

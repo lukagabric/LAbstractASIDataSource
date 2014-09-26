@@ -10,8 +10,8 @@
 @interface NewsItem : NSObject
 
 
-@property (strong, nonatomic) NSString *title;
-@property (strong, nonatomic) NSString *description;
+@property (strong, nonatomic) NSString *newsTitle;
+@property (strong, nonatomic) NSString *newsDescription;
 
 
 @end
