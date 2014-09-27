@@ -1,3 +1,8 @@
+DEPRECATED
+==========
+
+Instead https://github.com/lukagabric/LGDataSource
+
 LAbstractASIDataSource
 ======================
 
